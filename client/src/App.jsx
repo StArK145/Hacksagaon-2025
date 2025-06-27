@@ -10,7 +10,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<AuthDashboard />} />
-      <Route path="/profile" element={<UserProfile/>} />
+      {/* <Route path="/profile" element={<UserProfile/>} /> */}
       <Route path="/complete-profile" element={<CompleteProfile />} />
       
       {/* Protect dashboard route */}
