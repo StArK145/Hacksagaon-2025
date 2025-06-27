@@ -107,6 +107,8 @@ export const fetchAllChatSummariesGrouped = async () => {
 export const deleteChatHistoryByChatId = async (chatId) => {
   const user = auth.currentUser;
   if (!user) return;
+  console.log(user);
+  
 
   try {
     const q = query(
