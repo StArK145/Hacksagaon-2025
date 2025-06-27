@@ -20,7 +20,7 @@ import {
 // import Reminders from '../components/Reminders';
  import Profile from './UserProfile';
 // import EmergencySOS from '../components/EmergencySOS';
-// import SymptomChat from '../components/SymptomChat';
+import SymptomChat from '../components/SymptomChat';
 
 
 
