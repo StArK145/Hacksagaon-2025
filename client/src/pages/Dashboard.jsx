@@ -18,7 +18,7 @@ import Reminders from '../components/Reminders';
 import Profile from './UserProfile';
 import EmergencySOS from '../components/EmergencySOS';
 import SymptomChat from '../components/SymptomChat';
-// import NearbyHospitals from '../components/NearbyHospitals';
+import NearbyHospitals from '../components/NearbyHospitals';
 // import HealthChart from '../components/HealthChart';
 // import MonthlyReport from '../components/MonthlyReport';
 
