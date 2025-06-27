@@ -17,18 +17,14 @@ import {
 // import NearbyHospitals from '../components/NearbyHospitals';
 // import HealthChart from '../components/HealthChart';
 // import MonthlyReport from '../components/MonthlyReport';
-// import Reminders from '../components/Reminders';
- import Profile from './UserProfile';
-// import EmergencySOS from '../components/EmergencySOS';
+import Reminders from "../components/Reminders";
+import Profile from "./UserProfile";
+import EmergencySOS from "../components/EmergencySOS";
 // import SymptomChat from '../components/SymptomChat';
-
-
 
 const Dashboard = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
- 
-  
 
   const healthFeatures = [
     {
@@ -115,8 +111,6 @@ const Dashboard = () => {
       action: () => setSelectedChat("emergency"),
     },
   ];
-
- 
 
   return (
     <div className="flex h-screen bg-gray-50">
