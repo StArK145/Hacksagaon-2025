@@ -1,0 +1,572 @@
+import React, { useState } from 'react';
+import { getAuth } from 'firebase/auth';
+import useUserProfile from "../utils/useUserProfile";
+import { FaUser, FaWeight, FaRulerVertical, FaCalculator, FaHeartbeat, FaPhone, FaUserMd, FaNotesMedical, FaIdCard, FaChartLine } from 'react-icons/fa';
+
+const UserProfile = () => {
+  const [bmi, setBmi] = useState(null);
+  const [bmiCategory, setBmiCategory] = useState('');
+  const [activeTab, setActiveTab] = useState('overview');
+
+  const auth = getAuth();
+  const { profile, loading } = useUserProfile();
+
+  React.useEffect(() => {
+    if (profile && profile.height && profile.weight) {
+      const heightInMeters = profile.height / 100;
+      const bmiValue = (profile.weight / (heightInMeters * heightInMeters)).toFixed(1);
+      setBmi(bmiValue);
+
+      if (bmiValue < 18.5) {
+        setBmiCategory('Underweight');
+      } else if (bmiValue >= 18.5 && bmiValue <= 24.9) {
+        setBmiCategory('Normal weight');
+      } else if (bmiValue >= 25 && bmiValue <= 29.9) {
+        setBmiCategory('Overweight');
+      } else {
+        setBmiCategory('Obesity');
+      }
+    }
+  }, [profile]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-teal-500"></div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="max-w-4xl mx-auto p-8">
+        <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Profile Not Found</h2>
+          <p className="text-gray-600 mb-6">We couldn't find your health profile. Please complete your profile setup.</p>
+          <button 
+            className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-6 rounded-lg"
+            onClick={() => window.location.href = '/complete-profile'}
+          >
+            Complete Your Profile
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const formatDate = (timestamp) => {
+    if (!timestamp) return 'N/A';
+    
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto p-4">
+      {/* Profile Header */}
+      <div className="bg-gradient-to-r from-teal-600 to-teal-800 text-white rounded-t-2xl p-6 md:p-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between">
+          <div className="flex items-center mb-4 md:mb-0">
+            <div className="bg-gray-200 border-2 border-dashed rounded-full w-16 h-16 mr-4"></div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold">{profile.name}</h1>
+              <p className="text-teal-100">{profile.email || auth.currentUser.email}</p>
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row sm:items-center">
+            <div className="bg-teal-500/20 px-4 py-2 rounded-lg mb-2 sm:mb-0 sm:mr-4">
+              <p className="text-sm">Profile Status</p>
+              <p className="font-bold">{profile.isProfileComplete ? 'Complete' : 'Incomplete'}</p>
+            </div>
+            <div className="bg-teal-500/20 px-4 py-2 rounded-lg">
+              <p className="text-sm">Last Updated</p>
+              <p className="font-bold">{profile.lastUpdated ? formatDate(profile.lastUpdated) : 'N/A'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Navigation Tabs */}
+      <div className="bg-white border-b flex overflow-x-auto">
+        <button 
+          className={`py-4 px-6 font-medium text-lg whitespace-nowrap ${activeTab === 'overview' ? 'text-teal-600 border-b-2 border-teal-600' : 'text-gray-500'}`}
+          onClick={() => setActiveTab('overview')}
+        >
+          <FaIdCard className="inline mr-2" /> Overview
+        </button>
+        <button 
+          className={`py-4 px-6 font-medium text-lg whitespace-nowrap ${activeTab === 'health' ? 'text-teal-600 border-b-2 border-teal-600' : 'text-gray-500'}`}
+          onClick={() => setActiveTab('health')}
+        >
+          <FaHeartbeat className="inline mr-2" /> Health Data
+        </button>
+        <button 
+          className={`py-4 px-6 font-medium text-lg whitespace-nowrap ${activeTab === 'metrics' ? 'text-teal-600 border-b-2 border-teal-600' : 'text-gray-500'}`}
+          onClick={() => setActiveTab('metrics')}
+        >
+          <FaChartLine className="inline mr-2" /> Metrics
+        </button>
+      </div>
+      
+      {/* Main Content */}
+      <div className="bg-white rounded-b-2xl shadow-xl p-6 md:p-8">
+        {/* Overview Tab */}
+        {activeTab === 'overview' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Personal Information Card */}
+            <div className="lg:col-span-1 bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <FaUser className="mr-2 text-teal-600" /> Personal Information
+              </h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-gray-500">Full Name</p>
+                  <p className="font-medium">{profile.name}</p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-500">Age</p>
+                    <p className="font-medium">{profile.age || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Phone</p>
+                    <p className="font-medium">{profile.phone || 'N/A'}</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <p className="text-sm text-gray-500">Email</p>
+                  <p className="font-medium">{profile.email || auth.currentUser.email}</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Health Summary Card */}
+            <div className="lg:col-span-2 bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <FaHeartbeat className="mr-2 text-teal-600" /> Health Summary
+              </h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* BMI Card */}
+                <div className="bg-white rounded-lg p-4 border border-gray-200">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-sm text-gray-500">Body Mass Index (BMI)</p>
+                      <p className="text-2xl font-bold mt-1">{bmi || 'N/A'}</p>
+                      <p className={`mt-1 text-sm font-medium ${
+                        bmiCategory === 'Underweight' ? 'text-blue-500' :
+                        bmiCategory === 'Normal weight' ? 'text-green-500' :
+                        bmiCategory === 'Overweight' ? 'text-yellow-500' : 
+                        bmiCategory === 'Obesity' ? 'text-red-500' : 'text-gray-500'
+                      }`}>
+                        {bmiCategory || 'Calculate with height/weight'}
+                      </p>
+                    </div>
+                    <div className="bg-teal-100 p-2 rounded-lg">
+                      <FaCalculator className="text-teal-600 text-xl" />
+                    </div>
+                  </div>
+                  
+                  {bmi && (
+                    <div className="mt-4">
+                      <div className="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Underweight</span>
+                        <span>Obesity</span>
+                      </div>
+                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full ${
+                            bmiCategory === 'Underweight' ? 'bg-blue-500 w-1/4' :
+                            bmiCategory === 'Normal weight' ? 'bg-green-500 w-2/4' :
+                            bmiCategory === 'Overweight' ? 'bg-yellow-500 w-3/4' : 
+                            bmiCategory === 'Obesity' ? 'bg-red-500 w-full' : 'bg-gray-300'
+                          }`}
+                        ></div>
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>&lt;18.5</span>
+                        <span>18.5-24.9</span>
+                        <span>25-29.9</span>
+                        <span>30+</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Physical Metrics Card */}
+                <div className="bg-white rounded-lg p-4 border border-gray-200">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-sm text-gray-500">Physical Metrics</p>
+                      <div className="grid grid-cols-2 gap-4 mt-2">
+                        <div>
+                          <p className="text-xs text-gray-500">Height</p>
+                          <p className="font-medium">
+                            {profile.height ? `${profile.height} cm` : 'N/A'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500">Weight</p>
+                          <p className="font-medium">
+                            {profile.weight ? `${profile.weight} kg` : 'N/A'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-teal-100 p-2 rounded-lg">
+                      <FaRulerVertical className="text-teal-600 text-xl" />
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Conditions Summary */}
+                <div className="bg-white rounded-lg p-4 border border-gray-200">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-sm text-gray-500">Health Conditions</p>
+                      <div className="mt-2">
+                        <p className="font-medium">
+                          {profile.diseases?.length || 0} recorded
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {profile.diseases?.filter(d => d.type === 'current').length || 0} current
+                        </p>
+                      </div>
+                    </div>
+                    <div className="bg-teal-100 p-2 rounded-lg">
+                      <FaNotesMedical className="text-teal-600 text-xl" />
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Emergency Contacts Summary */}
+                <div className="bg-white rounded-lg p-4 border border-gray-200">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-sm text-gray-500">Emergency Contacts</p>
+                      <p className="font-medium mt-2">
+                        {profile.emergencyContacts?.length || 0} contacts
+                      </p>
+                    </div>
+                    <div className="bg-teal-100 p-2 rounded-lg">
+                      <FaUserMd className="text-teal-600 text-xl" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Health Data Tab */}
+        {activeTab === 'health' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Health Conditions */}
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <FaNotesMedical className="mr-2 text-teal-600" /> Health Conditions
+              </h2>
+              
+              {profile.diseases && profile.diseases.length > 0 ? (
+                <div className="space-y-4">
+                  {/* Current Conditions */}
+                  <div>
+                    <h3 className="font-bold text-gray-700 mb-3 text-lg">Current Conditions</h3>
+                    <div className="space-y-3">
+                      {profile.diseases
+                        .filter(d => d.type === 'current')
+                        .map((disease, index) => (
+                          <div 
+                            key={index} 
+                            className="p-4 bg-white rounded-lg border-l-4 border-red-500"
+                          >
+                            <div className="flex justify-between">
+                              <div>
+                                <p className="font-medium">{disease.name}</p>
+                                {disease.diagnosisDate && (
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    Diagnosed: {disease.diagnosisDate}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      
+                      {profile.diseases.filter(d => d.type === 'current').length === 0 && (
+                        <p className="text-gray-500 text-center py-4">No current conditions recorded</p>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Past Conditions */}
+                  <div>
+                    <h3 className="font-bold text-gray-700 mb-3 text-lg">Past Conditions</h3>
+                    <div className="space-y-3">
+                      {profile.diseases
+                        .filter(d => d.type === 'past')
+                        .map((disease, index) => (
+                          <div 
+                            key={index} 
+                            className="p-4 bg-white rounded-lg border-l-4 border-blue-500"
+                          >
+                            <div className="flex justify-between">
+                              <div>
+                                <p className="font-medium">{disease.name}</p>
+                                {disease.diagnosisDate && (
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    Recovered: {disease.diagnosisDate}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      
+                      {profile.diseases.filter(d => d.type === 'past').length === 0 && (
+                        <p className="text-gray-500 text-center py-4">No past conditions recorded</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <FaNotesMedical className="text-gray-300 text-4xl mx-auto mb-4" />
+                  <p className="text-gray-500">No health conditions recorded</p>
+                </div>
+              )}
+            </div>
+            
+            {/* Emergency Contacts */}
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <FaUserMd className="mr-2 text-teal-600" /> Emergency Contacts
+              </h2>
+              
+              {profile.emergencyContacts && profile.emergencyContacts.length > 0 ? (
+                <div className="grid grid-cols-1 gap-4">
+                  {profile.emergencyContacts.map((contact, index) => (
+                    <div 
+                      key={index} 
+                      className="p-5 bg-white rounded-xl border border-teal-100"
+                    >
+                      <div className="flex items-start">
+                        <div className="bg-teal-100 p-3 rounded-full mr-4">
+                          <FaUser className="text-teal-600" />
+                        </div>
+                        <div className="flex-grow">
+                          <h3 className="font-bold text-gray-800 text-lg">{contact.name}</h3>
+                          <p className="text-gray-600 mt-1 flex items-center">
+                            <FaPhone className="mr-2 text-teal-600" /> {contact.phone}
+                          </p>
+                          <p className="text-sm text-gray-500 mt-2">
+                            Relationship: {contact.relationship || 'Not specified'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <FaUserMd className="text-gray-300 text-4xl mx-auto mb-4" />
+                  <p className="text-gray-500">No emergency contacts added</p>
+                  <p className="text-sm text-gray-400 mt-2">
+                    Add emergency contacts in your health profile settings
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {/* Metrics Tab */}
+        {activeTab === 'metrics' && (
+          <div className="grid grid-cols-1 gap-8">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <FaChartLine className="mr-2 text-teal-600" /> Health Metrics
+              </h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* BMI Detailed Card */}
+                <div className="bg-white rounded-xl p-5 border border-gray-200">
+                  <h3 className="font-bold text-gray-800 mb-4">Body Mass Index (BMI)</h3>
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <p className="text-3xl font-bold text-teal-600">{bmi || 'N/A'}</p>
+                      <p className={`mt-1 font-medium ${
+                        bmiCategory === 'Underweight' ? 'text-blue-500' :
+                        bmiCategory === 'Normal weight' ? 'text-green-500' :
+                        bmiCategory === 'Overweight' ? 'text-yellow-500' : 
+                        bmiCategory === 'Obesity' ? 'text-red-500' : 'text-gray-500'
+                      }`}>
+                        {bmiCategory || 'Calculate with height/weight'}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-gray-500">Height</p>
+                      <p className="font-medium">
+                        {profile.height ? `${profile.height} cm` : 'N/A'}
+                      </p>
+                      <p className="text-sm text-gray-500 mt-2">Weight</p>
+                      <p className="font-medium">
+                        {profile.weight ? `${profile.weight} kg` : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {bmi && (
+                    <div className="mt-6">
+                      <div className="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Underweight</span>
+                        <span>Obesity</span>
+                      </div>
+                      <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full ${
+                            bmiCategory === 'Underweight' ? 'bg-blue-500 w-1/4' :
+                            bmiCategory === 'Normal weight' ? 'bg-green-500 w-2/4' :
+                            bmiCategory === 'Overweight' ? 'bg-yellow-500 w-3/4' : 
+                            bmiCategory === 'Obesity' ? 'bg-red-500 w-full' : 'bg-gray-300'
+                          }`}
+                        ></div>
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>&lt;18.5</span>
+                        <span>18.5-24.9</span>
+                        <span>25-29.9</span>
+                        <span>30+</span>
+                      </div>
+                      
+                      <div className="mt-6 grid grid-cols-4 gap-2">
+                        <div className={`p-2 rounded text-center ${
+                          bmiCategory === 'Underweight' 
+                            ? 'bg-blue-100 border border-blue-300' 
+                            : 'bg-gray-50'
+                        }`}>
+                          <p className="text-xs text-gray-600">Underweight</p>
+                          <p className="text-sm font-medium">&lt;18.5</p>
+                        </div>
+                        <div className={`p-2 rounded text-center ${
+                          bmiCategory === 'Normal weight' 
+                            ? 'bg-green-100 border border-green-300' 
+                            : 'bg-gray-50'
+                        }`}>
+                          <p className="text-xs text-gray-600">Normal</p>
+                          <p className="text-sm font-medium">18.5-24.9</p>
+                        </div>
+                        <div className={`p-2 rounded text-center ${
+                          bmiCategory === 'Overweight' 
+                            ? 'bg-yellow-100 border border-yellow-300' 
+                            : 'bg-gray-50'
+                        }`}>
+                          <p className="text-xs text-gray-600">Overweight</p>
+                          <p className="text-sm font-medium">25-29.9</p>
+                        </div>
+                        <div className={`p-2 rounded text-center ${
+                          bmiCategory === 'Obesity' 
+                            ? 'bg-red-100 border border-red-300' 
+                            : 'bg-gray-50'
+                        }`}>
+                          <p className="text-xs text-gray-600">Obesity</p>
+                          <p className="text-sm font-medium">30+</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Health Metrics Summary */}
+                <div className="bg-white rounded-xl p-5 border border-gray-200">
+                  <h3 className="font-bold text-gray-800 mb-4">Health Summary</h3>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="text-sm text-blue-800">Current Conditions</p>
+                      <p className="text-2xl font-bold text-blue-600">
+                        {profile.diseases?.filter(d => d.type === 'current').length || 0}
+                      </p>
+                    </div>
+                    
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <p className="text-sm text-green-800">Past Conditions</p>
+                      <p className="text-2xl font-bold text-green-600">
+                        {profile.diseases?.filter(d => d.type === 'past').length || 0}
+                      </p>
+                    </div>
+                    
+                    <div className="bg-teal-50 p-4 rounded-lg">
+                      <p className="text-sm text-teal-800">Emergency Contacts</p>
+                      <p className="text-2xl font-bold text-teal-600">
+                        {profile.emergencyContacts?.length || 0}
+                      </p>
+                    </div>
+                    
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <p className="text-sm text-purple-800">Profile Status</p>
+                      <p className="text-xl font-bold text-purple-600">
+                        {profile.isProfileComplete ? 'Complete' : 'Incomplete'}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6">
+                    <h4 className="font-medium text-gray-700 mb-3">Recent Updates</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Profile Created</span>
+                        <span className="font-medium">
+                          {profile.createdAt ? formatDate(profile.createdAt) : 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Last Updated</span>
+                        <span className="font-medium">
+                          {profile.lastUpdated ? formatDate(profile.lastUpdated) : 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Conditions Updated</span>
+                        <span className="font-medium">
+                          {profile.diseasesUpdated ? formatDate(profile.diseasesUpdated) : 'N/A'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Action Buttons */}
+        <div className="mt-8 flex justify-end">
+          <button 
+            className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-6 rounded-lg mr-4"
+            onClick={() => window.location.href = '/complete-profile'}
+          >
+            Edit Profile
+          </button>
+          <button 
+            className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 px-6 rounded-lg"
+            onClick={() => window.print()}
+          >
+            Print Health Summary
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default UserProfile;

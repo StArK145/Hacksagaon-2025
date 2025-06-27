@@ -18,7 +18,7 @@ import {
 // import HealthChart from '../components/HealthChart';
 // import MonthlyReport from '../components/MonthlyReport';
 // import Reminders from '../components/Reminders';
-// import Profile from './UserProfile';
+ import Profile from './UserProfile';
 // import EmergencySOS from '../components/EmergencySOS';
 // import SymptomChat from '../components/SymptomChat';
 
