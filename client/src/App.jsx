@@ -4,7 +4,7 @@ import AuthDashboard from "./pages/AuthDashboard";
 import Dashboard from "./pages/Dashboard";
 import ProfileChecker from "./contextes/ProfileChecker";
 import CompleteProfile from "./pages/CompleteProfile";
-import UserProfile from "./pages/UserProfile";
+// import UserProfile from "./pages/UserProfile";
 
 function App() {
   return (
