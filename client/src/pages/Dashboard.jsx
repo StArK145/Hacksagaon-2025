@@ -14,21 +14,17 @@ import {
   Shield,
 } from "lucide-react";
 
-// import NearbyHospitals from '../components/NearbyHospitals';
-// import HealthChart from '../components/HealthChart';
-// import MonthlyReport from '../components/MonthlyReport';
 import Reminders from '../components/Reminders';
 import Profile from './UserProfile';
 import EmergencySOS from '../components/EmergencySOS';
 import SymptomChat from '../components/SymptomChat';
-
-
+// import NearbyHospitals from '../components/NearbyHospitals';
+// import HealthChart from '../components/HealthChart';
+// import MonthlyReport from '../components/MonthlyReport';
 
 const Dashboard = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
- 
-  
 
   const healthFeatures = [
     {
@@ -115,6 +111,11 @@ const Dashboard = () => {
       action: () => setSelectedChat("emergency"),
     },
   ];
+
+  // 👉 Render SymptomChat full-screen (bypassing layout)
+  if (selectedChat === "symptom-chat") {
+    return <SymptomChat onBack={() => setSelectedChat(null)} />;
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -248,8 +249,6 @@ const Dashboard = () => {
             </div>
           )}
 
-          {/* Tab-based rendering */}
-          {selectedChat === "symptom-chat" && <SymptomChat />}
           {selectedChat === "nearby-hospitals" && <NearbyHospitals />}
           {selectedChat === "health-chart" && <HealthChart />}
           {selectedChat === "monthly-report" && <MonthlyReport />}
