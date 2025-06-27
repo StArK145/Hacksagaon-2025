@@ -17,14 +17,18 @@ import {
 // import NearbyHospitals from '../components/NearbyHospitals';
 // import HealthChart from '../components/HealthChart';
 // import MonthlyReport from '../components/MonthlyReport';
-import Reminders from "../components/Reminders";
-import Profile from "./UserProfile";
-import EmergencySOS from "../components/EmergencySOS";
-// import SymptomChat from '../components/SymptomChat';
+import Reminders from '../components/Reminders';
+import Profile from './UserProfile';
+import EmergencySOS from '../components/EmergencySOS';
+import SymptomChat from '../components/SymptomChat';
+
+
 
 const Dashboard = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+ 
+  
 
   const healthFeatures = [
     {
