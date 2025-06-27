@@ -1,19 +1,19 @@
-// utils/historyService.js
-
 import {
   collection,
   addDoc,
   query,
   where,
   getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
   Timestamp,
 } from "firebase/firestore";
-import { auth, db } from "./firebase"; // adjust the path as needed
+import { auth, db } from "./firebase";
 
-// /**
-//  * Save diagnosis history to Firestore
-//  * @param {Object} payload - { symptom, response, summary }
-//  */
+/**
+ * Save diagnosis history to Firestore
+ */
 export const saveDiagnosisHistory = async ({ symptom, response, summary, chatId, title }) => {
   const user = auth.currentUser;
   if (!user) return;
@@ -22,7 +22,7 @@ export const saveDiagnosisHistory = async ({ symptom, response, summary, chatId,
     await addDoc(collection(db, "history"), {
       uid: user.uid,
       chatId,
-      title, // ✅ Add this
+      title,
       symptom,
       response,
       summary,
@@ -34,6 +34,9 @@ export const saveDiagnosisHistory = async ({ symptom, response, summary, chatId,
   }
 };
 
+/**
+ * Fetch complete chat messages by chatId
+ */
 export const fetchChatHistoryByChatId = async (chatId) => {
   const user = auth.currentUser;
   if (!user) return [];
@@ -45,15 +48,19 @@ export const fetchChatHistoryByChatId = async (chatId) => {
       where("chatId", "==", chatId)
     );
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    return snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .sort((a, b) => a.timestamp?.seconds - b.timestamp?.seconds); // sort oldest to newest
   } catch (err) {
     console.error("❌ Error fetching chat:", err);
     return [];
   }
 };
 
-
-
+/**
+ * Group chat summaries by chatId
+ */
 export const fetchAllChatSummariesGrouped = async () => {
   const user = auth.currentUser;
   if (!user) return {};
@@ -70,7 +77,7 @@ export const fetchAllChatSummariesGrouped = async () => {
 
       if (!summariesByChat[chatId]) {
         summariesByChat[chatId] = {
-          title: title || 'Untitled Chat', // fallback if null
+          title: title || 'Untitled Chat',
           entries: [],
         };
       }
@@ -82,10 +89,10 @@ export const fetchAllChatSummariesGrouped = async () => {
       });
     });
 
-    // Optional: Sort entries inside each chat
-    Object.keys(summariesByChat).forEach(chatId => {
-      summariesByChat[chatId].entries.sort((a, b) => a.timestamp?.seconds - b.timestamp?.seconds);
-    });
+    // Sort each chat's entries by time
+    Object.values(summariesByChat).forEach(chat =>
+      chat.entries.sort((a, b) => a.timestamp?.seconds - b.timestamp?.seconds)
+    );
 
     return summariesByChat;
   } catch (err) {
@@ -94,3 +101,54 @@ export const fetchAllChatSummariesGrouped = async () => {
   }
 };
 
+/**
+ * Delete all messages in a chat
+ */
+export const deleteChatHistoryByChatId = async (chatId) => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  try {
+    const q = query(
+      collection(db, "history"),
+      where("uid", "==", user.uid),
+      where("chatId", "==", chatId)
+    );
+    const snapshot = await getDocs(q);
+
+    for (const docSnap of snapshot.docs) {
+      await deleteDoc(doc(db, "history", docSnap.id));
+    }
+
+    console.log(`🗑️ Deleted chat with ID: ${chatId}`);
+  } catch (err) {
+    console.error("❌ Error deleting chat:", err);
+  }
+};
+
+/**
+ * Update chat title
+ */
+export const updateChatTitle = async (chatId, newTitle) => {
+  const user = auth.currentUser;
+  if (!user || !newTitle.trim()) return;
+
+  try {
+    const q = query(
+      collection(db, "history"),
+      where("uid", "==", user.uid),
+      where("chatId", "==", chatId)
+    );
+    const snapshot = await getDocs(q);
+
+    for (const docSnap of snapshot.docs) {
+      await updateDoc(doc(db, "history", docSnap.id), {
+        title: newTitle.trim(),
+      });
+    }
+
+    console.log(`✏️ Renamed chat "${chatId}" to "${newTitle}"`);
+  } catch (err) {
+    console.error("❌ Error renaming chat:", err);
+  }
+};

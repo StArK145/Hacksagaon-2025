@@ -1,13 +1,16 @@
+// ✅ SymptomChat.jsx (component)
 import React, { useState, useEffect, useRef } from "react";
 import { marked } from "marked";
 import {
   saveDiagnosisHistory,
   fetchAllChatSummariesGrouped,
   fetchChatHistoryByChatId,
+  deleteChatHistoryByChatId,
+  updateChatTitle,
 } from "../utils/saveHistory";
 import { getAuth } from "firebase/auth";
 import useUserProfile from "../utils/useUserProfile";
-import { Menu, X, MessageSquareText } from "lucide-react";
+import { Menu, X, MessageSquareText, Trash2, Pencil } from "lucide-react";
 import { fetchDiagnosis } from "../utils/fetchDiagnosis";
 import { fetchSummary } from "../utils/fetchSummary";
 
@@ -26,18 +29,24 @@ const SymptomChat = ({ onBack }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [renamingId, setRenamingId] = useState(null);
+  const [newTitle, setNewTitle] = useState("");
   const chatBoxRef = useRef(null);
 
   const { profile } = useUserProfile();
   const auth = getAuth();
 
-  // ✅ Always start a fresh chat session
   useEffect(() => {
     const startNewChat = async () => {
       const summaries = await fetchAllChatSummariesGrouped();
       setSummaryHistory(summaries || {});
-
       const newChatId = generateChatId();
+
+      setSummaryHistory((prev) => ({
+        ...prev,
+        [newChatId]: { title: null, entries: [] },
+      }));
+
       setChatId(newChatId);
       setChatMessages([]);
     };
@@ -59,7 +68,7 @@ const SymptomChat = ({ onBack }) => {
 
     try {
       const diseases = profile?.diseases || [];
-      const summariesArray = Object.values(summaryHistory[chatId] || []);
+      const summariesArray = summaryHistory[chatId]?.entries || [];
       const pastSummaries = summariesArray.map((item) => item.summary);
 
       const result = await fetchDiagnosis(symptom, diseases, pastSummaries);
@@ -74,6 +83,17 @@ const SymptomChat = ({ onBack }) => {
         chatId,
         title,
       });
+
+      setSummaryHistory((prev) => ({
+        ...prev,
+        [chatId]: {
+          title,
+          entries: [
+            ...(prev[chatId]?.entries || []),
+            { summary: aiSummary.summary, timestamp: { seconds: Date.now() / 1000 } },
+          ],
+        },
+      }));
 
       setChatMessages((prev) => [
         ...prev,
@@ -101,9 +121,30 @@ const SymptomChat = ({ onBack }) => {
     setDiagnosisResult("");
   };
 
+  const handleDeleteChat = async (id) => {
+    await deleteChatHistoryByChatId(id);
+    const updated = await fetchAllChatSummariesGrouped();
+    setSummaryHistory(updated);
+    if (chatId === id) {
+      setChatId(null);
+      setChatMessages([]);
+    }
+  };
+
+  const handleRenameChat = async (id) => {
+    await updateChatTitle(id, newTitle);
+    const updated = await fetchAllChatSummariesGrouped();
+    setSummaryHistory(updated);
+    setRenamingId(null);
+    setNewTitle("");
+  };
+
+  const sortedChats = Object.entries(summaryHistory).sort(
+    (a, b) => (b[1]?.entries?.[0]?.timestamp?.seconds || 0) - (a[1]?.entries?.[0]?.timestamp?.seconds || 0)
+  );
+
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
       {sidebarOpen && (
         <aside className="w-72 bg-gray-900 text-white flex flex-col border-r border-gray-800">
           <div className="p-4 border-b border-gray-800 flex items-center justify-between">
@@ -119,26 +160,63 @@ const SymptomChat = ({ onBack }) => {
             </button>
           </div>
           <div className="p-4 space-y-3 overflow-y-auto flex-1">
-            {Object.keys(summaryHistory).length === 0 ? (
+            {sortedChats.length === 0 ? (
               <p className="text-sm text-gray-400">No chats yet</p>
             ) : (
-              Object.entries(summaryHistory).map(([id, entries]) => (
-                <button
-                  key={id}
-                  onClick={() => handleLoadChat(id)}
-                  className={`w-full text-left text-sm p-3 rounded-lg transition-all ${
-                    id === chatId
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-800 hover:bg-gray-700 text-gray-300"
-                  }`}
-                >
-                  <div className="font-medium truncate">
-                    {entries[0]?.title || `Chat: ${id.slice(-5)}`}
-                  </div>
-                  <div className="text-xs text-gray-400 mt-1 truncate">
-                    {entries[entries.length - 1]?.summary?.slice(0, 60) || ""}
-                  </div>
-                </button>
+              sortedChats.map(([id, data]) => (
+                <div key={id} className="relative group">
+                  {renamingId === id ? (
+                    <div className="flex items-center gap-1">
+                      <input
+                        value={newTitle}
+                        onChange={(e) => setNewTitle(e.target.value)}
+                        className="bg-gray-700 text-white text-sm px-2 py-1 rounded w-full"
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => handleRenameChat(id)}
+                        className="text-blue-400 text-xs px-2"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleLoadChat(id)}
+                      className={`w-full text-left text-sm p-3 rounded-lg transition-all ${
+                        id === chatId
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-800 hover:bg-gray-700 text-gray-300"
+                      }`}
+                    >
+                      <div className="flex justify-between items-center">
+                        <span className="font-medium truncate">
+                          {data.title || "New Chat"}
+                        </span>
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100">
+                          <Pencil
+                            className="w-4 h-4 text-gray-400 hover:text-white"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setRenamingId(id);
+                              setNewTitle(data.title || "");
+                            }}
+                          />
+                          <Trash2
+                            className="w-4 h-4 text-red-400 hover:text-red-600"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteChat(id);
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1 truncate">
+                        {data.entries?.[data.entries.length - 1]?.summary?.slice(0, 60) || ""}
+                      </div>
+                    </button>
+                  )}
+                </div>
               ))
             )}
           </div>
@@ -169,7 +247,6 @@ const SymptomChat = ({ onBack }) => {
           </div>
         </div>
 
-        {/* Chat UI */}
         <div className="flex-1 flex flex-col justify-between overflow-y-auto p-6">
           <div
             ref={chatBoxRef}
@@ -198,7 +275,6 @@ const SymptomChat = ({ onBack }) => {
             )}
           </div>
 
-          {/* Input */}
           <div className="flex items-end gap-2 border rounded-xl px-4 py-3 bg-white shadow-sm">
             <textarea
               rows={1}
