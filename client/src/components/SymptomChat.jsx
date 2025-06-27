@@ -3,6 +3,11 @@ import { marked } from "marked";
 import { getAuth } from "firebase/auth";
 import useUserProfile from "../utils/useUserProfile";
 import { fetchDiagnosis } from "../utils/fetchDiagnosis";
+import { fetchSummary } from "../utils/fetchSummary";
+import {
+  saveDiagnosisHistory,
+  fetchAllChatSummariesGrouped,
+} from "../utils/saveHistory";
 
 const generateChatId = () => {
   const timestamp = Date.now();
@@ -14,6 +19,7 @@ const SymptomChat = ({ onBack }) => {
   const [chatId, setChatId] = useState(null);
   const [symptom, setSymptom] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
+  const [summaryHistory, setSummaryHistory] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const chatBoxRef = useRef(null);
@@ -22,9 +28,14 @@ const SymptomChat = ({ onBack }) => {
   const auth = getAuth();
 
   useEffect(() => {
-    const newChatId = generateChatId();
-    setChatId(newChatId);
-    setChatMessages([]);
+    const startNewChat = async () => {
+      const summaries = await fetchAllChatSummariesGrouped();
+      setSummaryHistory(summaries || {});
+      const newChatId = generateChatId();
+      setChatId(newChatId);
+      setChatMessages([]);
+    };
+    startNewChat();
   }, []);
 
   useEffect(() => {
@@ -41,13 +52,28 @@ const SymptomChat = ({ onBack }) => {
 
     try {
       const diseases = profile?.diseases || [];
-      const result = await fetchDiagnosis(symptom, diseases, []);
+      const summariesArray = Object.values(summaryHistory[chatId] || []);
+      const pastSummaries = summariesArray.map((item) => item.summary);
+
+      const result = await fetchDiagnosis(symptom, diseases, pastSummaries);
+      const aiSummary = await fetchSummary(result);
+      const title = aiSummary.title || "Symptom Diagnosis Summary";
+
+      await saveDiagnosisHistory({
+        uid: auth.currentUser.uid,
+        symptom,
+        response: result,
+        summary: aiSummary.summary,
+        chatId,
+        title,
+      });
 
       setChatMessages((prev) => [
         ...prev,
         {
           symptom,
           response: result,
+          summary: aiSummary.summary,
         },
       ]);
 
@@ -94,6 +120,7 @@ const SymptomChat = ({ onBack }) => {
         )}
       </div>
 
+      {/* Input */}
       <div className="flex items-end gap-2 border rounded-xl px-4 py-3 bg-white shadow-sm">
         <textarea
           rows={1}
