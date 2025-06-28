@@ -7,7 +7,7 @@ import distanceRoute from './routes/distance.js';
 import analyzeRoute from './routes/analyzeRoute.js';
 import imageRoute from './routes/imageRoute.js';
 import summaryRouter from "./routes/summary.js";
-
+import geminiRoutes from './routes/gemini.js';
 
 dotenv.config();
 const app = express();
@@ -20,6 +20,7 @@ app.use('/api/distance', distanceRoute);
 app.use('/api/analyze', analyzeRoute);
 app.use('/api/image-diagnose', imageRoute);
 app.use("/api/summary", summaryRouter);
+app.use('/api/gemini', geminiRoutes);
 
 
 const PORT = process.env.PORT || 5000;
