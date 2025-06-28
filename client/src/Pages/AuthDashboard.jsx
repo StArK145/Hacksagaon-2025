@@ -178,445 +178,361 @@ const HealthAuth = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row">
-        {/* Health Info Panel */}
-        <div className="w-full md:w-2/5 bg-gradient-to-br from-teal-600 to-teal-800 text-white p-8 flex flex-col">
-          <div className="flex items-center mb-10">
-            <FaHeartbeat className="text-3xl mr-3" />
-            <h1 className="text-3xl font-bold">HealthTrack</h1>
+return (
+  <div className="min-h-screen flex relative overflow-hidden" style={{background: 'linear-gradient(135deg, rgb(48, 121, 102) 0%, rgb(129, 197, 169) 50%, rgb(239, 239, 239) 100%)'}}>
+    {/* Floating Elements */}
+    <div className="absolute inset-0">
+      <div className="absolute top-20 left-10 w-72 h-72 rounded-full opacity-10 animate-float" style={{backgroundColor: 'rgb(129, 197, 169)'}}></div>
+      <div className="absolute top-1/2 right-20 w-96 h-96 rounded-full opacity-15 animate-float-delayed" style={{backgroundColor: 'rgb(48, 121, 102)'}}></div>
+      <div className="absolute bottom-20 left-1/3 w-64 h-64 rounded-full opacity-20 animate-pulse" style={{backgroundColor: 'rgb(129, 197, 169)'}}></div>
+      
+      {/* Mesh Grid Pattern */}
+      <div className="absolute inset-0 opacity-5" style={{
+        backgroundImage: `radial-gradient(circle at 1px 1px, rgb(48, 121, 102) 1px, transparent 0)`,
+        backgroundSize: '40px 40px'
+      }}></div>
+    </div>
+
+    {/* Left Branding Section */}
+    <div className="w-1/2 relative z-10 flex flex-col justify-center items-center p-16 text-white">
+      <div className="backdrop-blur-lg rounded-3xl p-10 border shadow-2xl" style={{
+        background: 'rgba(48, 121, 102, 0.2)',
+        borderColor: 'rgba(129, 197, 169, 0.3)'
+      }}>
+        <div className="text-center mb-10">
+          {/* Logo Icon */}
+          <div className="w-24 h-24 mx-auto mb-8 rounded-3xl flex items-center justify-center shadow-xl transform hover:scale-105 transition-all duration-300" style={{
+            background: 'linear-gradient(135deg, rgb(129, 197, 169), rgb(48, 121, 102))'
+          }}>
+            <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
           </div>
-
-          <div className="flex-grow">
-            <h2 className="text-2xl font-bold mb-6">
-              Track Your Wellness Journey
-            </h2>
-
-            <div className="bg-teal-700/30 backdrop-blur-sm p-6 rounded-xl mb-8">
-              <div className="flex items-start">
-                <div className="bg-teal-500 p-3 rounded-full mr-4">
-                  <FaHeartbeat className="text-xl" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Health Insights</h3>
-                  <p className="opacity-90">
-                    Monitor vital signs, set health goals, and receive
-                    personalized insights to optimize your wellbeing.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <ul className="space-y-4">
-              <li className="flex items-center">
-                <div className="bg-teal-500/20 p-2 rounded-full mr-3">
-                  <FaHeartbeat />
-                </div>
-                Monitor heart rate, blood pressure, and more
-              </li>
-              <li className="flex items-center">
-                <div className="bg-teal-500/20 p-2 rounded-full mr-3">
-                  <FaHeartbeat />
-                </div>
-                Track medication and appointments
-              </li>
-              <li className="flex items-center">
-                <div className="bg-teal-500/20 p-2 rounded-full mr-3">
-                  <FaHeartbeat />
-                </div>
-                Receive data-driven health recommendations
-              </li>
-            </ul>
-          </div>
-
-          <div className="mt-auto pt-6 border-t border-teal-500/30">
-            <p className="text-sm opacity-80">
-              "Your health data is encrypted and protected with the highest
-              security standards."
-            </p>
-          </div>
+          
+          <h1 className="text-6xl font-bold mb-4 bg-clip-text text-transparent" style={{
+            backgroundImage: 'linear-gradient(135deg, rgb(129, 197, 169), white)'
+          }}>
+            HealthSync
+          </h1>
+          <p className="text-2xl opacity-90 font-light">
+            Transform Your Wellness Journey
+          </p>
         </div>
+        
+        {/* Feature Pills */}
+        <div className="space-y-6">
+          {[
+            { icon: "⚡", text: "AI-Powered Health Insights", delay: "0ms" },
+            { icon: "🔒", text: "Secure Data Protection", delay: "150ms" },
+            { icon: "📊", text: "Real-time Analytics", delay: "300ms" }
+          ].map((feature, index) => (
+            <div key={index} className="flex items-center space-x-4 p-4 rounded-2xl backdrop-blur-sm transform hover:scale-105 transition-all duration-300" style={{
+              background: 'rgba(129, 197, 169, 0.15)',
+              animationDelay: feature.delay
+            }}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-lg" style={{
+                backgroundColor: 'rgb(129, 197, 169)'
+              }}>
+                {feature.icon}
+              </div>
+              <span className="text-lg font-medium text-white">{feature.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
 
-        {/* Auth Tabs */}
-        <div className="w-full md:w-3/5 p-8">
-          <div className="flex border-b border-gray-200 mb-8">
-            <button
-              onClick={() => setActiveTab("login")}
-              className={`py-3 px-6 font-medium text-lg relative ${
-                activeTab === "login"
-                  ? "text-teal-600 after:absolute after:bottom-0 after:left-0 after:w-full after:h-1 after:bg-teal-600"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              <FaSignInAlt className="inline mr-2" /> Sign In
-            </button>
-            <button
-              onClick={() => setActiveTab("register")}
-              className={`py-3 px-6 font-medium text-lg relative ${
-                activeTab === "register"
-                  ? "text-teal-600 after:absolute after:bottom-0 after:left-0 after:w-full after:h-1 after:bg-teal-600"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              <FaUserPlus className="inline mr-2" /> Register
-            </button>
+    {/* Right Form Section */}
+    <div className="w-1/2 relative z-10 flex items-center justify-center p-8">
+      <div className="w-full max-w-lg">
+        {/* Main Form Container */}
+        <div className="backdrop-blur-xl rounded-3xl p-10 shadow-2xl border transform hover:scale-[1.01] transition-all duration-500" style={{
+          background: 'rgba(239, 239, 239, 0.95)',
+          borderColor: 'rgba(129, 197, 169, 0.2)'
+        }}>
+          
+          {/* Enhanced Tab Navigation */}
+          <div className="flex justify-center mb-10">
+            <div className="flex p-2 rounded-2xl relative shadow-inner" style={{backgroundColor: 'rgb(239, 239, 239)'}}>
+              <div 
+                className={`absolute top-2 bottom-2 rounded-xl shadow-lg transition-all duration-500 ease-out transform ${
+                  activeTab === "login" ? "left-2 w-24" : "left-28 w-28"
+                }`}
+                style={{
+                  background: 'linear-gradient(135deg, rgb(48, 121, 102), rgb(129, 197, 169))'
+                }}
+              ></div>
+              
+              {["login", "register"].map((tab) => (
+                <button
+                  key={tab}
+                  className={`relative z-10 px-8 py-4 font-bold text-sm transition-all duration-300 rounded-xl transform ${
+                    activeTab === tab 
+                      ? "text-white scale-105" 
+                      : "hover:scale-105"
+                  }`}
+                  style={{color: activeTab === tab ? 'white' : 'rgb(48, 121, 102)'}}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab === "login" ? "Sign In" : "Join Us"}
+                </button>
+              ))}
+            </div>
           </div>
 
+          {/* Enhanced Alert Messages */}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-lg flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              {error}
+            <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-r-xl animate-in slide-in-from-left duration-500">
+              <div className="flex items-center">
+                <div className="w-6 h-6 bg-red-400 rounded-full flex items-center justify-center mr-3">
+                  <span className="text-white text-sm">!</span>
+                </div>
+                <span className="font-medium text-red-800">{error}</span>
+              </div>
             </div>
           )}
-
+          
           {successMessage && (
-            <div className="mb-6 p-4 bg-green-50 text-green-700 rounded-lg flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              {successMessage}
+            <div className="border-l-4 p-4 mb-6 rounded-r-xl animate-in slide-in-from-left duration-500" style={{
+              backgroundColor: 'rgba(129, 197, 169, 0.1)',
+              borderColor: 'rgb(129, 197, 169)'
+            }}>
+              <div className="flex items-center">
+                <div className="w-6 h-6 rounded-full flex items-center justify-center mr-3" style={{backgroundColor: 'rgb(129, 197, 169)'}}>
+                  <span className="text-white text-sm">✓</span>
+                </div>
+                <span className="font-medium" style={{color: 'rgb(48, 121, 102)'}}>{successMessage}</span>
+              </div>
             </div>
           )}
 
-          {/* Login Section */}
-          {activeTab === "login" && (
-            <div>
-              <button
-                onClick={() => handleGoogleAuth(false)}
-                disabled={loading}
-                className="w-full mb-6 bg-white border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center shadow hover:shadow-md"
-              >
-                <FaGoogle className="text-red-500 text-xl mr-3" />
-                Sign in with Google
-              </button>
-
-              <div className="flex items-center my-6">
-                <div className="flex-grow border-t border-gray-200"></div>
-                <span className="mx-4 text-gray-500">or</span>
-                <div className="flex-grow border-t border-gray-200"></div>
+          {/* Form Content */}
+          {activeTab === "login" ? (
+            <form className="space-y-8" onSubmit={handleLogin}>
+              {/* Email Input */}
+              <div className="group">
+                <label className="block text-sm font-semibold mb-2" style={{color: 'rgb(48, 121, 102)'}}>
+                  Email Address
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <FaUser className="text-gray-400 group-focus-within:text-current transition-colors" style={{color: 'rgb(129, 197, 169)'}} />
+                  </div>
+                  <input
+                    type="email"
+                    ref={emailRef}
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    onKeyDown={(e) => handleArrowKeys(e, passwordRef, null)}
+                    placeholder="your@email.com"
+                    className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:ring-0 transition-all duration-300 text-gray-700 placeholder-gray-400 shadow-sm"
+                    style={{
+                      focusBorderColor: 'rgb(129, 197, 169)',
+                      focusBoxShadow: '0 0 0 3px rgba(129, 197, 169, 0.1)'
+                    }}
+                  />
+                </div>
               </div>
 
-              <form onSubmit={handleLogin}>
-                <div className="mb-5">
-                  <label className="block text-gray-700 mb-2 font-medium">
-                    Email
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaEnvelope className="text-gray-400" />
-                    </div>
-                    <input
-                      ref={emailRef}
-                      type="email"
-                      value={loginEmail}
-                      onKeyDown={(e) => handleArrowKeys(e, passwordRef, null)}
-                      onChange={(e) => setLoginEmail(e.target.value)}
-                      required
-                      className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="your.email@example.com"
-                    />
+              {/* Password Input */}
+              <div className="group">
+                <label className="block text-sm font-semibold mb-2" style={{color: 'rgb(48, 121, 102)'}}>
+                  Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <FaLock className="text-gray-400 group-focus-within:text-current transition-colors" style={{color: 'rgb(129, 197, 169)'}} />
                   </div>
-                </div>
-
-                <div className="mb-5">
-                  <label className="block text-gray-700 mb-2 font-medium">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaLock className="text-gray-400" />
-                    </div>
-                    <input
-                      ref={passwordRef}
-                      type={showPassword ? "text" : "password"}
-                      onKeyDown={(e) => handleArrowKeys(e, null, emailRef)}
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      required
-                      className="w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="Enter your password"
-                      minLength={6}
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <FaEyeSlash className="text-gray-400" />
-                      ) : (
-                        <FaEye className="text-gray-400" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="mb-6 text-right">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    ref={passwordRef}
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    onKeyDown={(e) => handleArrowKeys(e, null, emailRef)}
+                    placeholder="Enter your password"
+                    className="w-full pl-12 pr-12 py-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:ring-0 transition-all duration-300 text-gray-700 placeholder-gray-400 shadow-sm"
+                  />
                   <button
                     type="button"
-                    onClick={handleForgotPassword}
-                    className="text-sm text-teal-600 hover:underline"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-current transition-colors"
+                    style={{color: 'rgb(129, 197, 169)'}}
+                    onClick={() => setShowPassword(!showPassword)}
                   >
-                    Forgot password?
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center shadow-md"
-                >
-                  {loading ? (
-                    <>
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Signing In...
-                    </>
-                  ) : (
-                    <>
-                      <FaSignInAlt className="mr-2" /> Sign In
-                    </>
-                  )}
-                </button>
-              </form>
-
-              <div className="mt-6 text-center text-sm text-gray-600">
-                <p>
-                  By signing in, you agree to our{" "}
-                  <a href="#" className="text-teal-600 hover:underline">
-                    Terms
-                  </a>{" "}
-                  and{" "}
-                  <a href="#" className="text-teal-600 hover:underline">
-                    Privacy Policy
-                  </a>
-                </p>
               </div>
-            </div>
-          )}
 
-          {/* Registration Section */}
-          {activeTab === "register" && (
-            <div>
+              <div className="text-right">
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="text-sm font-semibold hover:underline transition-all duration-300"
+                  style={{color: 'rgb(48, 121, 102)'}}
+                >
+                  Forgot Password?
+                </button>
+              </div>
+
+              {/* Sign In Button */}
               <button
-                onClick={() => handleGoogleAuth(true)}
+                type="submit"
                 disabled={loading}
-                className="w-full mb-6 bg-white border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center shadow hover:shadow-md"
+                className="w-full py-4 rounded-2xl font-bold text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  background: loading ? 'rgb(129, 197, 169)' : 'linear-gradient(135deg, rgb(48, 121, 102), rgb(129, 197, 169))'
+                }}
               >
-                <FaGoogle className="text-red-500 text-xl mr-3" />
-                Sign up with Google
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Signing in...
+                  </div>
+                ) : (
+                  "Sign In to HealthSync"
+                )}
               </button>
 
-              <div className="flex items-center my-6">
-                <div className="flex-grow border-t border-gray-200"></div>
-                <span className="mx-4 text-gray-500">or</span>
-                <div className="flex-grow border-t border-gray-200"></div>
+              {/* Divider */}
+              <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="px-6 text-sm font-medium text-gray-500" style={{backgroundColor: 'rgb(239, 239, 239)'}}>
+                    or continue with
+                  </span>
+                </div>
               </div>
 
-              <form onSubmit={handleRegister}>
-                <div className="mb-5">
-                  <label className="block text-gray-700 mb-2 font-medium">
-                    Email
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaEnvelope className="text-gray-400" />
-                    </div>
-                    <input
-                      ref={registerEmailRef}
-                      type="email"
-                      value={registerEmail}
-                      onKeyDown={(e) =>
-                        handleArrowKeys(e, registerPasswordRef, null)
-                      }
-                      onChange={(e) => setRegisterEmail(e.target.value)}
-                      required
-                      className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-5">
-                  <label className="block text-gray-700 mb-2 font-medium">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaLock className="text-gray-400" />
-                    </div>
-                    <input
-                      ref={registerPasswordRef}
-                      type={showPassword ? "text" : "password"}
-                      value={registerPassword}
-                      onChange={(e) => setRegisterPassword(e.target.value)}
-                      required
-                      onKeyDown={(e) =>
-                        handleArrowKeys(e, confirmPasswordRef, registerEmailRef)
-                      }
-                      className="w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="Create a password (min 6 chars)"
-                      minLength={6}
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <FaEyeSlash className="text-gray-400" />
-                      ) : (
-                        <FaEye className="text-gray-400" />
+              {/* Google Button */}
+              <button
+                type="button"
+                onClick={() => handleGoogleAuth(false)}
+                className="w-full border-2 py-4 rounded-2xl flex items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:scale-[1.01] group"
+                style={{
+                  borderColor: 'rgb(129, 197, 169)',
+                  backgroundColor: 'white'
+                }}
+              >
+                <FaGoogle className="mr-3 text-red-500 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold" style={{color: 'rgb(48, 121, 102)'}}>Continue with Google</span>
+              </button>
+            </form>
+          ) : (
+            <form className="space-y-6" onSubmit={handleRegister}>
+              {/* Register form with similar styling patterns */}
+              <div className="space-y-6">
+                {[
+                  { ref: registerEmailRef, value: registerEmail, setValue: setRegisterEmail, type: "email", placeholder: "your@email.com", icon: FaEnvelope, label: "Email Address" },
+                  { ref: registerPasswordRef, value: registerPassword, setValue: setRegisterPassword, type: showPassword ? "text" : "password", placeholder: "Create strong password", icon: FaLock, label: "Password", showToggle: true },
+                  { ref: confirmPasswordRef, value: confirmPassword, setValue: setConfirmPassword, type: showConfirmPassword ? "text" : "password", placeholder: "Confirm password", icon: FaLock, label: "Confirm Password", showToggle: true, useConfirmToggle: true }
+                ].map((field, index) => (
+                  <div key={index} className="group">
+                    <label className="block text-sm font-semibold mb-2" style={{color: 'rgb(48, 121, 102)'}}>
+                      {field.label}
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <field.icon className="text-gray-400 group-focus-within:text-current transition-colors" style={{color: 'rgb(129, 197, 169)'}} />
+                      </div>
+                      <input
+                        type={field.type}
+                        ref={field.ref}
+                        value={field.value}
+                        onChange={(e) => field.setValue(e.target.value)}
+                        placeholder={field.placeholder}
+                        className="w-full pl-12 pr-12 py-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:ring-0 transition-all duration-300 text-gray-700 placeholder-gray-400 shadow-sm"
+                      />
+                      {field.showToggle && (
+                        <button
+                          type="button"
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-current transition-colors"
+                          style={{color: 'rgb(129, 197, 169)'}}
+                          onClick={() => field.useConfirmToggle ? setShowConfirmPassword(!showConfirmPassword) : setShowPassword(!showPassword)}
+                        >
+                          {(field.useConfirmToggle ? showConfirmPassword : showPassword) ? <FaEyeSlash /> : <FaEye />}
+                        </button>
                       )}
-                    </button>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Use at least 6 characters with a mix of letters and numbers
-                  </p>
-                </div>
-
-                <div className="mb-6">
-                  <label className="block text-gray-700 mb-2 font-medium">
-                    Confirm Password
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaLock className="text-gray-400" />
                     </div>
-                    <input
-                      ref={confirmPasswordRef}
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      onKeyDown={(e) =>
-                        handleArrowKeys(
-                          e,
-                          termsCheckboxRef,
-                          registerPasswordRef
-                        )
-                      }
-                      className="w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="Confirm your password"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <FaEyeSlash className="text-gray-400" />
-                      ) : (
-                        <FaEye className="text-gray-400" />
-                      )}
-                    </button>
                   </div>
-                </div>
+                ))}
+              </div>
 
-                <div className="mb-6 flex items-start">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    required
-                    className="mt-1 mr-3 h-5 w-5 text-teal-600 rounded focus:ring-teal-500"
-                  />
-                  <label htmlFor="terms" className="text-gray-700">
-                    I agree to the{" "}
-                    <a href="#" className="text-teal-600 hover:underline">
-                      Terms
-                    </a>{" "}
-                    and{" "}
-                    <a href="#" className="text-teal-600 hover:underline">
-                      Privacy Policy
-                    </a>
-                    , and I consent to the collection of my health data for
-                    personalized insights.
-                  </label>
-                </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-4 rounded-2xl font-bold text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  background: loading ? 'rgb(129, 197, 169)' : 'linear-gradient(135deg, rgb(48, 121, 102), rgb(129, 197, 169))'
+                }}
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Creating Account...
+                  </div>
+                ) : (
+                  "Create Your Account"
+                )}
+              </button>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center shadow-md"
-                >
-                  {loading ? (
-                    <>
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Creating Account...
-                    </>
-                  ) : (
-                    <>
-                      <FaUserPlus className="mr-2" /> Create Account
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
+              <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="px-6 text-sm font-medium text-gray-500" style={{backgroundColor: 'rgb(239, 239, 239)'}}>
+                    or continue with
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => handleGoogleAuth(true)}
+                className="w-full border-2 py-4 rounded-2xl flex items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:scale-[1.01] group"
+                style={{
+                  borderColor: 'rgb(129, 197, 169)',
+                  backgroundColor: 'white'
+                }}
+              >
+                <FaGoogle className="mr-3 text-red-500 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold" style={{color: 'rgb(48, 121, 102)'}}>Continue with Google</span>
+              </button>
+            </form>
           )}
         </div>
       </div>
     </div>
-  );
+
+    {/* Custom CSS for animations */}
+    <style jsx>{`
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+      }
+      
+      @keyframes float-delayed {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-30px) rotate(-5deg); }
+      }
+      
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      
+      .animate-float-delayed {
+        animation: float-delayed 8s ease-in-out infinite;
+      }
+      
+      input:focus {
+        border-color: rgb(129, 197, 169) !important;
+        box-shadow: 0 0 0 3px rgba(129, 197, 169, 0.1) !important;
+      }
+    `}</style>
+  </div>
+);
 };
 
 export default HealthAuth;

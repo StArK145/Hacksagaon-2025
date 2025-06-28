@@ -5,10 +5,13 @@ import Dashboard from "./pages/Dashboard";
 import ProfileChecker from "./contextes/ProfileChecker";
 import CompleteProfile from "./pages/CompleteProfile";
 import UserProfile from "./pages/UserProfile";
+import GettingStarted from "./pages/GettingStarted";
+
 
 function App() {
   return (
     <Routes>
+      <Route path="/jshkj " element={<GettingStarted />} />
       <Route path="/" element={<AuthDashboard />} />
       <Route path="/profile" element={<UserProfile />} />
       <Route path="/complete-profile" element={<CompleteProfile />} />
