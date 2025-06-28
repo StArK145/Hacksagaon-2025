@@ -16,13 +16,18 @@ import {
   Trash2,
   Pencil,
   ImagePlus,
+  Sparkles,
+  Activity,
   Send,
-  Stethoscope,
+  AlertTriangle,
+  CheckCircle,
+  Info,
+  Heart,
   Clock,
-  Bot,
   User,
   FileText,
-  Activity,
+  Lightbulb,
+  Shield,
 } from "lucide-react";
 import { fetchDiagnosis, fetchImageDiagnosis } from "../utils/fetchDiagnosis";
 import { fetchSummary } from "../utils/fetchSummary";
@@ -33,6 +38,179 @@ const generateChatId = () => {
   const timestamp = Date.now();
   const randomPart = Math.random().toString(36).substring(2, 7);
   return `chat_${timestamp}_${randomPart}`;
+};
+
+// Enhanced AI Response Component
+const EnhancedAIResponse = ({ response, isImageAnalysis = false }) => {
+  const [activeTab, setActiveTab] = useState('overview');
+  
+  // Parse the response to extract structured information
+  const parseResponse = (text) => {
+    const sections = {
+      overview: '',
+      symptoms: '',
+      recommendations: '',
+      precautions: '',
+      followUp: ''
+    };
+    
+    // Simple parsing logic - you can enhance this based on your API response format
+    const lines = text.split('\n');
+    let currentSection = 'overview';
+    
+    lines.forEach(line => {
+      const lowerLine = line.toLowerCase();
+      if (lowerLine.includes('symptom') || lowerLine.includes('condition')) {
+        currentSection = 'symptoms';
+      } else if (lowerLine.includes('recommend') || lowerLine.includes('treatment') || lowerLine.includes('suggest')) {
+        currentSection = 'recommendations';
+      } else if (lowerLine.includes('precaution') || lowerLine.includes('warning') || lowerLine.includes('avoid')) {
+        currentSection = 'precautions';
+      } else if (lowerLine.includes('follow') || lowerLine.includes('monitor') || lowerLine.includes('doctor')) {
+        currentSection = 'followUp';
+      }
+      
+      if (line.trim()) {
+        sections[currentSection] += line + '\n';
+      }
+    });
+    
+    return sections;
+  };
+  
+  const sections = parseResponse(response);
+  
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: FileText, color: 'emerald' },
+    { id: 'symptoms', label: 'Analysis', icon: Activity, color: 'blue' },
+    { id: 'recommendations', label: 'Recommendations', icon: Lightbulb, color: 'amber' },
+    { id: 'precautions', label: 'Precautions', icon: AlertTriangle, color: 'red' },
+    { id: 'followUp', label: 'Follow-up', icon: Clock, color: 'purple' }
+  ];
+  
+  const getTabColorClasses = (color, isActive) => {
+    const colors = {
+      emerald: isActive ? 'bg-emerald-100 text-emerald-700 border-emerald-300' : 'text-emerald-600 hover:bg-emerald-50',
+      blue: isActive ? 'bg-blue-100 text-blue-700 border-blue-300' : 'text-blue-600 hover:bg-blue-50',
+      amber: isActive ? 'bg-amber-100 text-amber-700 border-amber-300' : 'text-amber-600 hover:bg-amber-50',
+      red: isActive ? 'bg-red-100 text-red-700 border-red-300' : 'text-red-600 hover:bg-red-50',
+      purple: isActive ? 'bg-purple-100 text-purple-700 border-purple-300' : 'text-purple-600 hover:bg-purple-50'
+    };
+    return colors[color] || colors.emerald;
+  };
+  
+  const getSectionIcon = (sectionId) => {
+    switch(sectionId) {
+      case 'overview': return <FileText className="w-5 h-5" />;
+      case 'symptoms': return <Activity className="w-5 h-5" />;
+      case 'recommendations': return <Lightbulb className="w-5 h-5" />;
+      case 'precautions': return <AlertTriangle className="w-5 h-5" />;
+      case 'followUp': return <Clock className="w-5 h-5" />;
+      default: return <Info className="w-5 h-5" />;
+    }
+  };
+  
+  const getSectionBgColor = (sectionId) => {
+    switch(sectionId) {
+      case 'overview': return 'bg-emerald-50 border-emerald-200';
+      case 'symptoms': return 'bg-blue-50 border-blue-200';
+      case 'recommendations': return 'bg-amber-50 border-amber-200';
+      case 'precautions': return 'bg-red-50 border-red-200';
+      case 'followUp': return 'bg-purple-50 border-purple-200';
+      default: return 'bg-gray-50 border-gray-200';
+    }
+  };
+  
+  return (
+    <div className="bg-white rounded-2xl shadow-lg border border-emerald-100 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+            <Activity className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-white text-lg">
+              {isImageAnalysis ? 'Image Analysis Results' : 'AI Health Assessment'}
+            </h3>
+            <p className="text-emerald-100 text-sm">
+              {isImageAnalysis ? 'Medical image analysis completed' : 'Based on your symptoms and medical history'}
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Tabs */}
+      <div className="border-b border-gray-200 bg-gray-50">
+        <div className="flex overflow-x-auto scrollbar-hide">
+          {tabs.map((tab) => {
+            const TabIcon = tab.icon;
+            const hasContent = sections[tab.id]?.trim();
+            
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                disabled={!hasContent}
+                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? getTabColorClasses(tab.color, true)
+                    : hasContent 
+                      ? getTabColorClasses(tab.color, false)
+                      : 'text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                <TabIcon className="w-4 h-4" />
+                {tab.label}
+                {hasContent && activeTab !== tab.id && (
+                  <div className="w-2 h-2 bg-current rounded-full opacity-60"></div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      
+      {/* Content */}
+      <div className="p-6">
+        {sections[activeTab]?.trim() ? (
+          <div className={`p-4 rounded-xl border-2 ${getSectionBgColor(activeTab)}`}>
+            <div className="flex items-center gap-2 mb-3">
+              {getSectionIcon(activeTab)}
+              <h4 className="font-semibold text-gray-800 capitalize">
+                {activeTab === 'followUp' ? 'Follow-up Care' : activeTab}
+              </h4>
+            </div>
+            <div
+              className="prose prose-gray max-w-none text-gray-700 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: marked(sections[activeTab]) }}
+            />
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Info className="w-8 h-8 text-gray-400" />
+            </div>
+            <p className="text-gray-500">No specific information available for this section.</p>
+          </div>
+        )}
+      </div>
+      
+      {/* Footer with Important Notice */}
+      <div className="bg-amber-50 border-t border-amber-200 p-4">
+        <div className="flex items-start gap-3">
+          <Shield className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-amber-800 text-sm font-medium mb-1">Important Medical Disclaimer</p>
+            <p className="text-amber-700 text-xs leading-relaxed">
+              This AI analysis is for informational purposes only and should not replace professional medical advice. 
+              Please consult with a qualified healthcare provider for proper diagnosis and treatment.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const SymptomChat = ({ onBack }) => {
@@ -98,6 +276,7 @@ const SymptomChat = ({ onBack }) => {
             symptom,
             response: textResult,
             summary: aiSummary.summary,
+            isImageAnalysis: false,
           },
         ]);
       }
@@ -110,10 +289,11 @@ const SymptomChat = ({ onBack }) => {
         setChatMessages((prev) => [
           ...prev,
           {
-            symptom: "🖼️ Uploaded Image",
+            symptom: "🖼 Uploaded Image",
             imagePreview: URL.createObjectURL(previewImage),
             response: imageResult,
             summary: imageResult,
+            isImageAnalysis: true,
           },
         ]);
 
@@ -168,6 +348,7 @@ const SymptomChat = ({ onBack }) => {
           imagePreview: URL.createObjectURL(file),
           response: result.analysis,
           summary: "Medicine analysis completed",
+          isImageAnalysis: true,
         },
       ]);
     } catch (err) {
@@ -190,6 +371,7 @@ const SymptomChat = ({ onBack }) => {
           imagePreview: URL.createObjectURL(files[0]),
           response: result.analysis,
           summary: "Report analysis completed",
+          isImageAnalysis: true,
         },
       ]);
     } catch (err) {
@@ -232,139 +414,117 @@ const SymptomChat = ({ onBack }) => {
            (a[1]?.entries?.[0]?.timestamp?.seconds || 0);
   });
 
-  const formatDate = (timestamp) => {
-    const date = new Date(timestamp * 1000);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
   return (
-    <div className="flex h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+    <div className="flex h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50">
       {sidebarOpen && (
-        <aside className="w-80 bg-gradient-to-b from-emerald-700 to-emerald-800 text-white flex flex-col shadow-2xl">
-          <div className="p-6 border-b border-emerald-600/30 bg-emerald-600/20 backdrop-blur-sm">
-            <div className="flex items-center justify-between">
+        <aside className="w-80 bg-gradient-to-b from-emerald-900 via-teal-900 to-emerald-800 text-white flex flex-col shadow-2xl border-r border-emerald-700/30">
+          {/* Header */}
+          <div className="p-6 border-b border-emerald-700/30">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-emerald-500/30 rounded-lg">
-                  <Stethoscope className="w-6 h-6 text-emerald-200" />
+                <div className="p-2 bg-emerald-600/20 rounded-xl backdrop-blur-sm">
+                  <Activity className="w-6 h-6 text-emerald-300" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-white">Health Assistant</h2>
-                  <p className="text-xs text-emerald-100">Consultation History</p>
+                  <h2 className="text-xl font-bold text-white">HealthSync</h2>
+                  <p className="text-emerald-300 text-sm">Chat History</p>
                 </div>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="hover:bg-emerald-600/30 p-2 rounded-lg transition-all duration-200"
+                className="p-2 hover:bg-emerald-700/30 rounded-lg transition-all duration-200"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5 text-emerald-300" />
               </button>
             </div>
           </div>
-          
-          <div className="flex-1 overflow-y-auto p-4 space-y-2 scrollbar-hide">
-            <style jsx>{`
-              .scrollbar-hide {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-              }
-              .scrollbar-hide::-webkit-scrollbar {
-                display: none;
-              }
-            `}</style>
+
+          {/* Chat List */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {sortedChats.length === 0 ? (
               <div className="text-center py-8">
-                <MessageSquareText className="w-12 h-12 text-emerald-300 mx-auto mb-3 opacity-50" />
-                <p className="text-sm text-emerald-100">No consultations yet</p>
-                <p className="text-xs text-emerald-200">Start a conversation to begin</p>
+                <MessageSquareText className="w-12 h-12 text-emerald-400 mx-auto mb-3 opacity-50" />
+                <p className="text-emerald-300 text-sm">No conversations yet</p>
+                <p className="text-emerald-400 text-xs mt-1">Start your first health chat!</p>
               </div>
             ) : (
               sortedChats.map(([id, data]) => (
                 <div key={id} className="relative group">
                   {renamingId === id ? (
-                    <div className="bg-emerald-600/40 p-3 rounded-xl border border-emerald-500/30">
-                      <div className="flex items-center gap-2">
-                        <input
-                          value={newTitle}
-                          onChange={(e) => setNewTitle(e.target.value)}
-                          className="bg-emerald-600/30 text-white text-sm px-3 py-2 rounded-lg w-full border border-emerald-500/40 focus:border-emerald-300 focus:outline-none placeholder-emerald-200"
-                          placeholder="Enter chat title..."
-                          autoFocus
-                        />
-                        <button
-                          onClick={() => handleRenameChat(id)}
-                          className="bg-emerald-500 hover:bg-emerald-400 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all"
-                        >
-                          Save
-                        </button>
-                      </div>
+                    <div className="flex items-center gap-2 bg-emerald-800/50 p-3 rounded-xl backdrop-blur-sm">
+                      <input
+                        value={newTitle}
+                        onChange={(e) => setNewTitle(e.target.value)}
+                        className="bg-emerald-700/50 text-white text-sm px-3 py-2 rounded-lg w-full border border-emerald-600/30 focus:border-emerald-400 focus:outline-none placeholder-emerald-300"
+                        placeholder="Enter chat title..."
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => handleRenameChat(id)}
+                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-lg transition-all duration-200"
+                      >
+                        Save
+                      </button>
                     </div>
                   ) : (
                     <button
                       onClick={() => handleLoadChat(id)}
-                      className={`w-full text-left p-4 rounded-xl transition-all duration-200 border ${
+                      className={`w-full text-left text-sm p-4 rounded-xl transition-all duration-200 group relative overflow-hidden ${
                         id === chatId
-                          ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg border-emerald-400/40"
-                          : "bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-50 border-emerald-600/20 hover:border-emerald-500/30"
+                          ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg"
+                          : "bg-emerald-800/30 hover:bg-emerald-700/40 text-emerald-100 backdrop-blur-sm"
                       }`}
                     >
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex items-center gap-2">
-                          <Activity className="w-4 h-4 text-emerald-200" />
-                          <span className="font-semibold text-sm truncate max-w-[180px]">
-                            {data.title || "New Consultation"}
-                          </span>
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Sparkles className="w-4 h-4 text-emerald-300 flex-shrink-0" />
+                            <span className="font-semibold truncate text-white">
+                              {data.title || "New Consultation"}
+                            </span>
+                          </div>
+                          <div className="text-xs text-emerald-200 leading-relaxed line-clamp-2">
+                            {data.entries?.[data.entries.length - 1]?.summary?.slice(0, 80) || "Start a new health conversation..."}
+                          </div>
                         </div>
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Pencil
-                            className="w-4 h-4 text-emerald-200 hover:text-white transition-colors"
+                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-2">
+                          <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setRenamingId(id);
                               setNewTitle(data.title || "");
                             }}
-                          />
-                          <Trash2
-                            className="w-4 h-4 text-red-300 hover:text-red-200 transition-colors"
+                            className="p-1.5 hover:bg-emerald-600/50 rounded-lg transition-all duration-200"
+                          >
+                            <Pencil className="w-3.5 h-3.5 text-emerald-300" />
+                          </button>
+                          <button
                             onClick={(e) => {
                               e.stopPropagation();
                               handleDeleteChat(id);
                             }}
-                          />
+                            className="p-1.5 hover:bg-red-500/30 rounded-lg transition-all duration-200"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 text-red-300" />
+                          </button>
                         </div>
                       </div>
-                      <div className="text-xs text-emerald-100/70 mb-2 line-clamp-2">
-                        {data.entries?.[data.entries.length - 1]?.summary?.slice(0, 80) || "No summary available"}
-                      </div>
-                      {data.entries?.[data.entries.length - 1]?.timestamp && (
-                        <div className="flex items-center gap-1 text-xs text-emerald-200/60">
-                          <Clock className="w-3 h-3" />
-                          {formatDate(data.entries[data.entries.length - 1].timestamp.seconds)}
-                        </div>
-                      )}
                     </button>
                   )}
                 </div>
               ))
             )}
           </div>
-          
-          <div className="p-3 border-t border-emerald-600/20 bg-emerald-600/10 space-y-2">
-            <div className="text-xs text-emerald-100 font-medium mb-2 flex items-center gap-2">
-              <FileText className="w-3 h-3" />
-              Quick Analysis
-            </div>
-            <label className="flex items-center gap-2 text-xs text-emerald-100 cursor-pointer hover:text-white hover:bg-emerald-600/20 p-2 rounded-lg transition-all duration-200 group">
-              <div className="p-1.5 bg-emerald-500/20 rounded-md group-hover:bg-emerald-500/30 transition-all">
-                <ImagePlus className="w-3 h-3" />
+
+          {/* Action Buttons */}
+          <div className="p-4 border-t border-emerald-700/30 space-y-3">
+            <label className="flex items-center gap-3 p-3 text-sm text-emerald-200 cursor-pointer hover:text-white hover:bg-emerald-700/30 rounded-xl transition-all duration-200 group">
+              <div className="p-2 bg-emerald-600/20 rounded-lg group-hover:bg-emerald-600/30 transition-all duration-200">
+                <ImagePlus className="w-4 h-4" />
               </div>
               <div>
-                <div className="font-medium">Medicine Analysis</div>
-                <div className="text-xs text-emerald-200/80">Upload medicine photos</div>
+                <div className="font-medium">Analyze Medicine</div>
+                <div className="text-xs text-emerald-300">Upload medicine images</div>
               </div>
               <input
                 type="file"
@@ -373,13 +533,13 @@ const SymptomChat = ({ onBack }) => {
                 hidden
               />
             </label>
-            <label className="flex items-center gap-2 text-xs text-emerald-100 cursor-pointer hover:text-white hover:bg-emerald-600/20 p-2 rounded-lg transition-all duration-200 group">
-              <div className="p-1.5 bg-emerald-500/20 rounded-md group-hover:bg-emerald-500/30 transition-all">
-                <FileText className="w-3 h-3" />
+            <label className="flex items-center gap-3 p-3 text-sm text-emerald-200 cursor-pointer hover:text-white hover:bg-emerald-700/30 rounded-xl transition-all duration-200 group">
+              <div className="p-2 bg-emerald-600/20 rounded-lg group-hover:bg-emerald-600/30 transition-all duration-200">
+                <ImagePlus className="w-4 h-4" />
               </div>
               <div>
-                <div className="font-medium">Report Analysis</div>
-                <div className="text-xs text-emerald-200/80">Upload medical reports</div>
+                <div className="font-medium">Analyze Reports</div>
+                <div className="text-xs text-emerald-300">Upload medical reports</div>
               </div>
               <input
                 type="file"
@@ -393,103 +553,88 @@ const SymptomChat = ({ onBack }) => {
         </aside>
       )}
 
+      {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        <div className="bg-white/80 backdrop-blur-sm px-8 py-5 border-b border-emerald-200/50 flex items-center justify-between shadow-sm">
-          <div className="flex items-center gap-4">
-            {!sidebarOpen && (
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="p-3 hover:bg-emerald-100 rounded-xl transition-all duration-200"
-              >
-                <Menu className="w-6 h-6 text-emerald-700" />
-              </button>
-            )}
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl">
-                <Stethoscope className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-emerald-900">Health Consultation</h1>
-                <p className="text-sm text-emerald-600">AI-powered symptom analysis</p>
+        {/* Header */}
+        <div className="bg-white/80 backdrop-blur-sm px-8 py-6 border-b border-emerald-200/50 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {!sidebarOpen && (
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="p-3 hover:bg-emerald-100 rounded-xl transition-all duration-200 group"
+                >
+                  <Menu className="w-6 h-6 text-emerald-600 group-hover:text-emerald-700" />
+                </button>
+              )}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl">
+                  <Activity className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                    AI Health Assistant
+                  </h1>
+                  <p className="text-emerald-600 text-sm">Powered by advanced AI diagnostics</p>
+                </div>
               </div>
             </div>
+            <button
+              onClick={onBack}
+              className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              ← Back to Dashboard
+            </button>
           </div>
-          <button
-            onClick={onBack}
-            className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            ← Back to Dashboard
-          </button>
         </div>
 
-        <div className="flex-1 flex flex-col justify-between overflow-hidden p-6">
-          <div ref={chatBoxRef} className="flex-1 overflow-y-auto space-y-6 mb-6 pr-2">
-            {chatMessages.length === 0 && !loading && (
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col justify-between overflow-hidden p-8">
+          <div ref={chatBoxRef} className="flex-1 overflow-y-auto space-y-6 mb-6">
+            {chatMessages.length === 0 && (
               <div className="text-center py-16">
-                <div className="p-6 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                  <Bot className="w-12 h-12 text-white" />
+                <div className="w-24 h-24 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Sparkles className="w-12 h-12 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-emerald-900 mb-2">Welcome to Health Assistant</h3>
-                <p className="text-emerald-600 max-w-md mx-auto">
-                  Describe your symptoms or upload medical images for AI-powered analysis and consultation.
+                <h3 className="text-2xl font-bold text-emerald-800 mb-3">Welcome to AI Health Assistant</h3>
+                <p className="text-emerald-600 text-lg max-w-md mx-auto">
+                  Describe your symptoms or upload medical images for instant AI-powered health insights.
                 </p>
               </div>
             )}
             
             {chatMessages.map((msg, index) => (
               <div key={index} className="space-y-4">
+                {/* User Message */}
                 <div className="flex justify-end">
-                  <div className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-4 rounded-2xl rounded-br-md max-w-md shadow-lg">
+                  <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-4 rounded-2xl rounded-tr-lg max-w-lg shadow-lg">
                     <div className="flex items-center gap-2 mb-2">
                       <User className="w-4 h-4" />
-                      <span className="text-xs font-medium opacity-90">You</span>
+                      <span className="text-sm font-medium opacity-90">You</span>
                     </div>
-                    <div className="whitespace-pre-line text-sm leading-relaxed">
+                    <div className="font-medium text-sm whitespace-pre-line">
                       {msg.symptom}
                     </div>
                   </div>
                 </div>
                 
+                {/* Image Preview */}
                 {msg.imagePreview && (
-                  <div className="flex justify-end mb-4">
-                    <div className="bg-white p-3 rounded-2xl shadow-lg border border-emerald-200">
-                      <img
-                        src={msg.imagePreview}
-                        alt="Uploaded Preview"
-                        className="w-48 h-auto rounded-xl"
-                      />
-                    </div>
+                  <div className="flex justify-end">
+                    <img
+                      src={msg.imagePreview}
+                      alt="Uploaded Preview"
+                      className="w-48 h-auto rounded-2xl shadow-lg border-2 border-emerald-200"
+                    />
                   </div>
                 )}
                 
+                {/* Enhanced AI Response */}
                 <div className="flex justify-start">
-                  <div className="bg-white/90 backdrop-blur-sm p-5 rounded-2xl rounded-bl-md max-w-4xl shadow-lg border border-emerald-200/50">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="p-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg">
-                        <Bot className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="text-xs font-medium text-emerald-700">AI Health Assistant</span>
-                    </div>
-                    <div 
-                      className="prose prose-sm prose-emerald max-w-none"
-                      dangerouslySetInnerHTML={{ __html: marked(msg.response) }}
-                      style={{
-                        '--tw-prose-body': 'rgb(6 78 59)',
-                        '--tw-prose-headings': 'rgb(4 47 46)',
-                        '--tw-prose-links': 'rgb(5 150 105)',
-                        '--tw-prose-bold': 'rgb(4 47 46)',
-                        '--tw-prose-counters': 'rgb(6 78 59)',
-                        '--tw-prose-bullets': 'rgb(6 78 59)',
-                        '--tw-prose-hr': 'rgb(209 250 229)',
-                        '--tw-prose-quotes': 'rgb(6 78 59)',
-                        '--tw-prose-quote-borders': 'rgb(167 243 208)',
-                        '--tw-prose-captions': 'rgb(6 78 59)',
-                        '--tw-prose-code': 'rgb(4 47 46)',
-                        '--tw-prose-pre-code': 'rgb(229 231 235)',
-                        '--tw-prose-pre-bg': 'rgb(17 24 39)',
-                        '--tw-prose-th-borders': 'rgb(209 250 229)',
-                        '--tw-prose-td-borders': 'rgb(229 231 235)',
-                      }}
+                  <div className="max-w-4xl w-full">
+                    <EnhancedAIResponse 
+                      response={msg.response} 
+                      isImageAnalysis={msg.isImageAnalysis}
                     />
                   </div>
                 </div>
@@ -498,18 +643,16 @@ const SymptomChat = ({ onBack }) => {
             
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-white/90 backdrop-blur-sm p-5 rounded-2xl rounded-bl-md shadow-lg border border-emerald-200/50">
+                <div className="bg-white p-6 rounded-2xl rounded-tl-lg shadow-lg border border-emerald-100">
                   <div className="flex items-center gap-3">
-                    <div className="p-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg">
-                      <Bot className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
+                      <Activity className="w-4 h-4 text-white animate-pulse" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                      </div>
-                      <span className="text-sm text-emerald-700">Analyzing your symptoms...</span>
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                      <span className="text-emerald-600 font-medium ml-2">Analyzing symptoms...</span>
                     </div>
                   </div>
                 </div>
@@ -517,17 +660,20 @@ const SymptomChat = ({ onBack }) => {
             )}
             
             {error && (
-              <div className="bg-red-50 border border-red-200 p-4 rounded-xl">
-                <div className="flex items-center gap-2 text-red-700">
-                  <span className="text-sm font-medium">❌ {error}</span>
+              <div className="flex justify-start">
+                <div className="bg-red-50 border border-red-200 p-4 rounded-2xl rounded-tl-lg max-w-lg">
+                  <div className="text-red-700 font-medium">
+                    ❌ {error}
+                  </div>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-emerald-200/50 p-4">
+          {/* Input Area */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-emerald-200/50 shadow-xl p-4">
             <div className="flex items-end gap-4">
-              <div className="flex-1">
+              <div className="flex-1 relative">
                 <textarea
                   rows={1}
                   value={symptom}
@@ -539,33 +685,30 @@ const SymptomChat = ({ onBack }) => {
                     }
                   }}
                   placeholder="Describe your symptoms in detail..."
-                  className="w-full resize-none border-none focus:ring-0 focus:outline-none text-sm bg-transparent placeholder-emerald-400 text-emerald-900 py-3 px-4 rounded-xl"
-                  style={{ minHeight: '52px' }}
+                  className="w-full resize-none border-none focus:ring-0 focus:outline-none text-gray-700 bg-transparent placeholder-emerald-400 text-lg p-2"
                 />
                 {previewImage && (
-                  <div className="mt-3 flex items-center gap-3 p-3 bg-emerald-50 rounded-xl border border-emerald-200">
-                    <img
-                      src={URL.createObjectURL(previewImage)}
-                      alt="Preview"
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-emerald-800">Image ready for analysis</p>
-                      <p className="text-xs text-emerald-600">{previewImage.name}</p>
+                  <div className="absolute bottom-full left-0 mb-2">
+                    <div className="relative">
+                      <img
+                        src={URL.createObjectURL(previewImage)}
+                        alt="Preview"
+                        className="w-16 h-16 rounded-xl object-cover border-2 border-emerald-300"
+                      />
+                      <button
+                        onClick={() => setPreviewImage(null)}
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                      >
+                        ×
+                      </button>
                     </div>
-                    <button
-                      onClick={() => setPreviewImage(null)}
-                      className="text-emerald-500 hover:text-emerald-700 p-1"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
                   </div>
                 )}
               </div>
               
               <div className="flex items-center gap-2">
                 <label className="cursor-pointer p-3 hover:bg-emerald-100 rounded-xl transition-all duration-200 group">
-                  <ImagePlus className="w-5 h-5 text-emerald-600 group-hover:text-emerald-700" />
+                  <ImagePlus className="w-6 h-6 text-emerald-600 group-hover:text-emerald-700" />
                   <input
                     type="file"
                     accept="image/*"
@@ -573,12 +716,13 @@ const SymptomChat = ({ onBack }) => {
                     hidden
                   />
                 </label>
+                
                 <button
                   onClick={handleHealthQuery}
                   disabled={loading || (!symptom.trim() && !previewImage)}
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white p-3 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:from-gray-300 disabled:to-gray-400 text-white p-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none group"
                 >
-                  <Send className="w-5 h-5" />
+                  <Send className="w-6 h-6 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                 </button>
               </div>
             </div>
