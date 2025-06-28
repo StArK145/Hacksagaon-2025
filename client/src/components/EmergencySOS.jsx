@@ -84,7 +84,7 @@ const EmergencySOS = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#C2E7DB] to-[#A8D6C4] flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Main SOS Card */}
         <div className="bg-white rounded-3xl shadow-2xl p-8 text-center relative overflow-hidden">
