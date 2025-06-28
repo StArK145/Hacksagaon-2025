@@ -185,7 +185,7 @@ const Dashboard = () => {
   {/* Main Content */}
   <div className="flex-1 flex flex-col">
     {/* Top Bar */}
-    <div className="bg-white/80 backdrop-blur-md border-b border-white/20 p-4 flex justify-between items-center shadow-sm">
+    {/* <div className="bg-white/80 backdrop-blur-md border-b border-white/20 p-4 flex justify-between items-center shadow-sm">
       <div className="flex items-center space-x-4">
         {!sidebarOpen && (
           <button
@@ -205,7 +205,7 @@ const Dashboard = () => {
         <Bell className="w-5 h-5 text-gray-700" />
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
       </button>
-    </div>
+    </div> */}
 
     {/* Content Area */}
     <div className="flex-1 overflow-y-auto p-6 md:p-10">

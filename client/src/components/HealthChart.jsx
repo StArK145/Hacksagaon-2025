@@ -385,7 +385,7 @@ function HealthChart() {
     <div className="min-h-screen bg-gradient-to-br from-[#C2E7DB] to-[#A8D6C4] p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="flex items-center justify-between mb-8">
+        {/* <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
             <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#5CC4A2] to-[#4AAE90] rounded-2xl shadow-lg">
               <span className="text-3xl">🧠</span>
@@ -404,7 +404,7 @@ function HealthChart() {
               <span className="text-[#2D5A4A] font-semibold text-sm">Using cached data</span>
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Main Content */}
         {hasError ? (

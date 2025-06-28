@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { jsPDF } from "jspdf";
 import useUserProfile from "../utils/useUserProfile";
-import { fetchSymptomsLast30Days } from "../utils/saveHistory"; // you'll need to implement this if not already
-import { generateMonthlyReport } from "../utils/report"; // the fetch function to POST to your backend
+import { fetchSymptomsLast30Days } from "../utils/saveHistory";
+import { generateMonthlyReport } from "../utils/report";
+import { marked } from "marked";
 
 const HealthReport = () => {
   const { profile, loading } = useUserProfile();
@@ -37,9 +39,53 @@ const HealthReport = () => {
     fetchAndGenerateReport();
   }, [loading, profile]);
 
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "pt",
+      format: "a4",
+    });
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 40;
+    const maxLineWidth = pageWidth - margin * 2;
+    const lineHeight = 18;
+
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(20);
+    doc.text("📋 Monthly Health Report", margin, 60);
+
+    doc.setFontSize(12);
+    doc.setFont("Helvetica", "normal");
+
+    let y = 100;
+    const plainText = report.replace(/[#*_`>-]/g, "").replace(/\n{2,}/g, "\n");
+    const lines = doc.splitTextToSize(plainText, maxLineWidth);
+    lines.forEach((line) => {
+      if (y > 750) {
+        doc.addPage();
+        y = 60;
+      }
+      doc.text(line, margin, y);
+      y += lineHeight;
+    });
+
+    doc.save("Health_Report.pdf");
+  };
+
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">📋 Monthly Health Report</h2>
+    <div className="p-6 max-w-5xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">📋 Monthly Health Report</h2>
+        {report && (
+          <button
+            onClick={handleDownloadPDF}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm"
+          >
+            Download PDF
+          </button>
+        )}
+      </div>
 
       {loadingReport && (
         <div className="text-blue-500 font-medium mb-4">Generating report...</div>
@@ -50,15 +96,18 @@ const HealthReport = () => {
       )}
 
       {report && (
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h3 className="text-lg font-semibold mb-2">🧠 Gemini AI Analysis</h3>
-          <pre className="whitespace-pre-wrap text-sm">{report}</pre>
+        <div className="bg-white p-6 rounded-lg shadow mb-6 text-sm leading-relaxed prose max-w-none">
+          <h3 className="text-lg font-semibold mb-3 text-blue-700">🧠 Gemini AI Analysis</h3>
+          <div
+            className="prose max-w-none"
+            dangerouslySetInnerHTML={{ __html: marked.parse(report) }}
+          />
         </div>
       )}
 
-      <div>
-        <h4 className="text-sm text-gray-600 mb-1">Last 30 Days Symptoms</h4>
-        <pre className="bg-gray-100 p-2 rounded text-sm overflow-x-auto max-h-60">
+      <div className="bg-gray-100 p-4 rounded">
+        <h4 className="text-sm text-gray-600 mb-2">🩺 Last 30 Days Symptom Data (Raw)</h4>
+        <pre className="overflow-x-auto max-h-60 text-xs">
           {JSON.stringify(symptomData, null, 2)}
         </pre>
       </div>
@@ -67,3 +116,5 @@ const HealthReport = () => {
 };
 
 export default HealthReport;
+
+
