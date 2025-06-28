@@ -10,6 +10,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { auth, db } from "./firebase";
+import useUserProfile from "./useUserProfile";
 
 /**
  * Save diagnosis history to Firestore
@@ -152,5 +153,105 @@ export const updateChatTitle = async (chatId, newTitle) => {
     console.log(`✏️ Renamed chat "${chatId}" to "${newTitle}"`);
   } catch (err) {
     console.error("❌ Error renaming chat:", err);
+  }
+};
+
+
+
+export const fetchSymptomsLast7Days = async (uid) => {
+  if (!uid) return [];
+
+  const today = new Date();
+  const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+  const q = query(collection(db, "history"), where("uid", "==", uid));
+
+  try {
+    const snapshot = await getDocs(q);
+    const dailySymptomsMap = {};
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const entryDate = data.timestamp?.toDate?.() || new Date(data.timestamp);
+
+      if (entryDate >= sevenDaysAgo && entryDate <= today) {
+        const dateStr = entryDate.toISOString().split("T")[0];
+
+        if (!dailySymptomsMap[dateStr]) {
+          dailySymptomsMap[dateStr] = [];
+        }
+
+        if (typeof data.symptom === "string") {
+          const cleaned = data.symptom
+            .toLowerCase()
+            .split(/,| and /i)
+            .map(s => s.trim())
+            .filter(s => s && !["dead", "image uploaded"].includes(s));
+
+          dailySymptomsMap[dateStr].push(...cleaned);
+        }
+      }
+    });
+
+    const result = Object.entries(dailySymptomsMap)
+      .map(([date, symptoms]) => ({
+        date,
+        symptoms: [...new Set(symptoms)] // remove duplicates
+      }))
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    return result;
+  } catch (error) {
+    console.error("Error fetching symptoms:", error);
+    return [];
+  }
+};
+
+export const fetchSymptomsLast30Days = async (uid) => {
+  if (!uid) return [];
+
+  const today = new Date();
+  const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+  const q = query(collection(db, "history"), where("uid", "==", uid));
+
+  try {
+    const snapshot = await getDocs(q);
+    const dailySymptomsMap = {};
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const entryDate = data.timestamp?.toDate?.() || new Date(data.timestamp);
+
+      if (entryDate >= thirtyDaysAgo && entryDate <= today) {
+        const dateStr = entryDate.toISOString().split("T")[0];
+
+        if (!dailySymptomsMap[dateStr]) {
+          dailySymptomsMap[dateStr] = [];
+        }
+
+        if (typeof data.symptom === "string") {
+          const cleaned = data.symptom
+            .toLowerCase()
+            .split(/,| and /i)
+            .map(s => s.trim())
+            .filter(s => s && !["dead", "image uploaded"].includes(s));
+
+          dailySymptomsMap[dateStr].push(...cleaned);
+        }
+      }
+    });
+
+    const result = Object.entries(dailySymptomsMap)
+      .map(([date, symptoms]) => ({
+        date,
+        symptoms: [...new Set(symptoms)] // unique symptoms per day
+      }))
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    return result;
+  } catch (error) {
+    console.error("❌ Error fetching 30-day symptoms:", error);
+    return [];
   }
 };
