@@ -589,7 +589,7 @@ const SymptomChat = ({ onBack }) => {
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col justify-between overflow-hidden p-8">
+        <div className="flex-1 flex flex-col justify-between overflow-hidden p-8 bg-gradient-to-b from-[#C1FAF5] via-[#A0F0E8] to-[#6CD4C7]">
           <div ref={chatBoxRef} className="flex-1 overflow-y-auto space-y-6 mb-6">
             {chatMessages.length === 0 && (
               <div className="text-center py-16">
