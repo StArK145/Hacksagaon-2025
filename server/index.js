@@ -8,6 +8,7 @@ import analyzeRoute from './routes/analyzeRoute.js';
 import imageRoute from './routes/imageRoute.js';
 import summaryRouter from "./routes/summary.js";
 import geminiRoutes from './routes/gemini.js';
+import reportRoutes from './routes/reportRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -21,7 +22,7 @@ app.use('/api/analyze', analyzeRoute);
 app.use('/api/image-diagnose', imageRoute);
 app.use("/api/summary", summaryRouter);
 app.use('/api/gemini', geminiRoutes);
-
+app.use('/api', reportRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

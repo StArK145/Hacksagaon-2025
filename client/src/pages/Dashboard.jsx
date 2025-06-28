@@ -20,7 +20,7 @@ import EmergencySOS from '../components/EmergencySOS';
 import SymptomChat from '../components/SymptomChat';
 import NearbyHospitals from '../components/NearbyHospitals';
 import HealthChart from '../components/HealthChart';
-// import MonthlyReport from '../components/MonthlyReport';
+import MonthlyReport from '../components/Report';
 
 const Dashboard = () => {
   const [selectedChat, setSelectedChat] = useState(null);

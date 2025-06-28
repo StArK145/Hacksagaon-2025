@@ -1,4 +1,3 @@
-
 export async function getCriticalityAnalysis(dailySymptoms) {
   try {
     const res = await fetch("http://localhost:5000/api/gemini/criticality", {
@@ -9,15 +8,16 @@ export async function getCriticalityAnalysis(dailySymptoms) {
 
     const json = await res.json();
 
-    if (!res.ok) {
-      console.error("❌ Criticality API error:", json.error || res.statusText);
-      return { error: json.error || "Unknown error from Gemini API", raw: json.raw || null };
-    }
-
-    console.log("🩺 Criticality Data:", json);
-    return json;
+    return {
+      ok: res.ok,
+      status: res.status,
+      data: json, // Clean parsed data
+    };
   } catch (err) {
-    console.error("❌ Fetch error:", err);
-    return { error: "Network error", raw: err.message };
+    return {
+      ok: false,
+      status: 500,
+      error: err.message,
+    };
   }
 }
