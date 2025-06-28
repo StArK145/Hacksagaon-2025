@@ -1,79 +1,10 @@
-import React, { useState } from 'react';
-import { getAuth } from 'firebase/auth';
-import useUserProfile from "../utils/useUserProfile";
-import { FaUser, FaWeight, FaRulerVertical, FaCalculator, FaHeartbeat, FaPhone, FaUserMd, FaNotesMedical, FaIdCard, FaChartLine } from 'react-icons/fa';
-
-const UserProfile = () => {
-  const [bmi, setBmi] = useState(null);
-  const [bmiCategory, setBmiCategory] = useState('');
-  const [activeTab, setActiveTab] = useState('overview');
-
-  const auth = getAuth();
-  const { profile, loading } = useUserProfile();
-
-  React.useEffect(() => {
-    if (profile && profile.height && profile.weight) {
-      const heightInMeters = profile.height / 100;
-      const bmiValue = (profile.weight / (heightInMeters * heightInMeters)).toFixed(1);
-      setBmi(bmiValue);
-
-      if (bmiValue < 18.5) {
-        setBmiCategory('Underweight');
-      } else if (bmiValue >= 18.5 && bmiValue <= 24.9) {
-        setBmiCategory('Normal weight');
-      } else if (bmiValue >= 25 && bmiValue <= 29.9) {
-        setBmiCategory('Overweight');
-      } else {
-        setBmiCategory('Obesity');
-      }
-    }
-  }, [profile]);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-teal-500"></div>
-      </div>
-    );
-  }
-
-  if (!profile) {
-    return (
-      <div className="max-w-4xl mx-auto p-8">
-        <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Profile Not Found</h2>
-          <p className="text-gray-600 mb-6">We couldn't find your health profile. Please complete your profile setup.</p>
-          <button
-            className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-6 rounded-lg"
-            onClick={() => window.location.href = '/complete-profile'}
-          >
-            Complete Your Profile
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const formatDate = (timestamp) => {
-    if (!timestamp) return 'N/A';
-
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
- return (
+return (
   <div className="max-w-6xl mx-auto p-4">
     {/* Profile Header */}
-    <div className="bg-white/30 t-white rounded-t-2xl p-6 md:p-8">
+    <div className="bg-gradient-to-r from-[#FF8FA3] to-[#FFA6C1] text-white rounded-t-2xl p-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between">
         <div className="flex items-center mb-4 md:mb-0">
-
+          <div className="bg-white border-2 border-dashed rounded-full w-16 h-16 mr-4"></div>
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">{profile.name}</h1>
             <p className="text-pink-100">{profile.email || auth.currentUser.email}</p>
@@ -81,11 +12,11 @@ const UserProfile = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center">
-          <div className=" px-4 py-2 rounded-lg mb-2 sm:mb-0 sm:mr-4">
+          <div className="bg-[#FF8FA3]/20 px-4 py-2 rounded-lg mb-2 sm:mb-0 sm:mr-4">
             <p className="text-sm">Profile Status</p>
             <p className="font-bold">{profile.isProfileComplete ? 'Complete' : 'Incomplete'}</p>
           </div>
-          <div className=" px-4 py-2 rounded-lg">
+          <div className="bg-[#FF8FA3]/20 px-4 py-2 rounded-lg">
             <p className="text-sm">Last Updated</p>
             <p className="font-bold">{profile.lastUpdated ? formatDate(profile.lastUpdated) : 'N/A'}</p>
           </div>
@@ -124,7 +55,7 @@ const UserProfile = () => {
             {/* Personal Information Card */}
             <div className="lg:col-span-1 bg-gray-50 rounded-xl p-6 border border-gray-100">
               <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                <FaUser className="mr-2 text-[#FF8FA3]" /> Personal Information
+                <FaUser className="mr-2 text-teal-600" /> Personal Information
               </h2>
 
               <div className="space-y-4">
@@ -154,7 +85,7 @@ const UserProfile = () => {
             {/* Health Summary Card */}
             <div className="lg:col-span-2 bg-gray-50 rounded-xl p-6 border border-gray-100">
               <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                <FaHeartbeat className="mr-2 text-[#FF8FA3]" /> Health Summary
+                <FaHeartbeat className="mr-2 text-teal-600" /> Health Summary
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -173,7 +104,7 @@ const UserProfile = () => {
                       </p>
                     </div>
                     <div className="bg-teal-100 p-2 rounded-lg">
-                      <FaCalculator className="text-[#FF8FA3] text-xl" />
+                      <FaCalculator className="text-teal-600 text-xl" />
                     </div>
                   </div>
 
@@ -223,7 +154,7 @@ const UserProfile = () => {
                       </div>
                     </div>
                     <div className="bg-teal-100 p-2 rounded-lg">
-                      <FaRulerVertical className="text-[#FF8FA3] text-xl" />
+                      <FaRulerVertical className="text-teal-600 text-xl" />
                     </div>
                   </div>
                 </div>
@@ -243,7 +174,7 @@ const UserProfile = () => {
                       </div>
                     </div>
                     <div className="bg-teal-100 p-2 rounded-lg">
-                      <FaNotesMedical className="text-[#FF8FA3] text-xl" />
+                      <FaNotesMedical className="text-teal-600 text-xl" />
                     </div>
                   </div>
                 </div>
@@ -258,7 +189,7 @@ const UserProfile = () => {
                       </p>
                     </div>
                     <div className="bg-teal-100 p-2 rounded-lg">
-                      <FaUserMd className="text-[#FF8FA3] text-xl" />
+                      <FaUserMd className="text-teal-600 text-xl" />
                     </div>
                   </div>
                 </div>
@@ -273,7 +204,7 @@ const UserProfile = () => {
             {/* Health Conditions */}
             <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
               <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                <FaNotesMedical className="mr-2 text-[#FF8FA3]" /> Health Conditions
+                <FaNotesMedical className="mr-2 text-teal-600" /> Health Conditions
               </h2>
 
               {profile.diseases && profile.diseases.length > 0 ? (
@@ -349,7 +280,7 @@ const UserProfile = () => {
             {/* Emergency Contacts */}
             <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
               <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                <FaUserMd className="mr-2 text-[#FF8FA3]" /> Emergency Contacts
+                <FaUserMd className="mr-2 text-teal-600" /> Emergency Contacts
               </h2>
 
               {profile.emergencyContacts && profile.emergencyContacts.length > 0 ? (
@@ -361,12 +292,12 @@ const UserProfile = () => {
                     >
                       <div className="flex items-start">
                         <div className="bg-teal-100 p-3 rounded-full mr-4">
-                          <FaUser className="text-[#FF8FA3]" />
+                          <FaUser className="text-teal-600" />
                         </div>
                         <div className="flex-grow">
                           <h3 className="font-bold text-gray-800 text-lg">{contact.name}</h3>
                           <p className="text-gray-600 mt-1 flex items-center">
-                            <FaPhone className="mr-2 text-[#FF8FA3]" /> {contact.phone}
+                            <FaPhone className="mr-2 text-teal-600" /> {contact.phone}
                           </p>
                           <p className="text-sm text-gray-500 mt-2">
                             Relationship: {contact.relationship || 'Not specified'}
@@ -394,7 +325,7 @@ const UserProfile = () => {
           <div className="grid grid-cols-1 gap-8">
             <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
               <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                <FaChartLine className="mr-2 text-[#FF8FA3]" /> Health Metrics
+                <FaChartLine className="mr-2 text-teal-600" /> Health Metrics
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -403,7 +334,7 @@ const UserProfile = () => {
                   <h3 className="font-bold text-gray-800 mb-4">Body Mass Index (BMI)</h3>
                   <div className="flex items-end justify-between">
                     <div>
-                      <p className="text-3xl font-bold text-[#FF8FA3]">{bmi || 'N/A'}</p>
+                      <p className="text-3xl font-bold text-teal-600">{bmi || 'N/A'}</p>
                       <p className={`mt-1 font-medium ${bmiCategory === 'Underweight' ? 'text-blue-500' :
                           bmiCategory === 'Normal weight' ? 'text-green-500' :
                             bmiCategory === 'Overweight' ? 'text-yellow-500' :
@@ -501,7 +432,7 @@ const UserProfile = () => {
 
                     <div className="bg-teal-50 p-4 rounded-lg">
                       <p className="text-sm text-teal-800">Emergency Contacts</p>
-                      <p className="text-2xl font-bold text-[#FF8FA3]">
+                      <p className="text-2xl font-bold text-teal-600">
                         {profile.emergencyContacts?.length || 0}
                       </p>
                     </div>
@@ -561,6 +492,3 @@ const UserProfile = () => {
     </div>
   </div>
 );
-
-};
-export default UserProfile;

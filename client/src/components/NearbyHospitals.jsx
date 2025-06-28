@@ -107,115 +107,114 @@ const NearbyHospitalsOSM = () => {
     fetchHospitals();
   }, [location]);
 
-  // --- UI Rendering (unchanged from your version)
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center space-x-3">
-            <div className="bg-blue-600 p-2 rounded-lg">
-              <Heart className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Nearby Hospitals</h1>
-              <p className="text-gray-600">Within 20 km of your location</p>
-            </div>
+return (
+  <div className="min-h-screen bg-[#DDFCFB]">
+    {/* Header */}
+    <div className="bg-white shadow-sm border-b border-[#FFA6C1]">
+      <div className="container mx-auto px-6 py-6">
+        <div className="flex items-center space-x-3">
+          <div className="bg-[#FF8FA3] p-2 rounded-xl shadow-md">
+            <Heart className="w-6 h-6 text-white" />
           </div>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="container mx-auto px-6 py-8">
-        {loading ? (
-          <div className="text-center">
-            <div className="inline-block animate-spin h-12 w-12 border-b-2 border-blue-600 mb-4 rounded-full"></div>
-            <p className="text-gray-600">Loading nearby hospitals...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center text-red-600">{error}</div>
-        ) : hospitals.length === 0 ? (
-          <div className="text-center py-12">
-            <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">No hospitals found</h3>
-            <p className="text-gray-500">No hospitals were found within 20 km of your location.</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <div className="flex items-center text-gray-600 mb-6">
-              <Navigation className="w-4 h-4 mr-2" />
-              <span>Found {hospitals.length} hospitals nearby</span>
-            </div>
-
-            {hospitals.map((hospital, index) => (
-              <div
-                key={index}
-                className="bg-white shadow-sm border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <Heart className="w-6 h-6 text-red-500" />
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{hospital.name}</h3>
-                        <div className="flex items-center text-gray-600 mt-1">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          <span className="text-sm">
-                            {hospital.distance.toFixed(2)} km away
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex gap-3 mt-4">
-                      <a
-                        href={`https://www.google.com/maps?q=${hospital.lat},${hospital.lon}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg"
-                      >
-                        <MapPin className="w-4 h-4 mr-2" />
-                        View on Map
-                      </a>
-                      <a
-                        href={`https://www.google.com/maps/dir/?api=1&destination=${hospital.lat},${hospital.lon}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium rounded-lg"
-                      >
-                        <Navigation className="w-4 h-4 mr-2" />
-                        Get Directions
-                      </a>
-                    </div>
-                  </div>
-                  <div className="ml-4 text-right">
-                    <div className="bg-green-100 border border-green-300 px-3 py-1 rounded-full">
-                      <span className="text-green-700 text-sm font-medium">Open 24/7</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Footer */}
-      <div className="bg-white shadow-sm border-t border-gray-200 mt-12">
-        <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center justify-between text-sm text-gray-600">
-            <div className="flex items-center space-x-2">
-              <Clock className="w-4 h-4" />
-              <span>Last updated: {new Date().toLocaleTimeString()}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Phone className="w-4 h-4" />
-              <span>Emergency: 108</span>
-            </div>
+          <div>
+            <h1 className="text-2xl font-bold text-[#222]">Nearby Hospitals</h1>
+            <p className="text-gray-600">Within 20 km of your location</p>
           </div>
         </div>
       </div>
     </div>
-  );
+
+    {/* Content */}
+    <div className="container mx-auto px-6 py-8">
+      {loading ? (
+        <div className="text-center">
+          <div className="inline-block animate-spin h-12 w-12 border-b-2 border-[#FF8FA3] mb-4 rounded-full"></div>
+          <p className="text-gray-600">Loading nearby hospitals...</p>
+        </div>
+      ) : error ? (
+        <div className="text-center text-red-600">{error}</div>
+      ) : hospitals.length === 0 ? (
+        <div className="text-center py-12">
+          <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">No hospitals found</h3>
+          <p className="text-gray-500">No hospitals were found within 20 km of your location.</p>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          <div className="flex items-center text-gray-700 mb-6">
+            <Navigation className="w-4 h-4 mr-2 text-[#FF8FA3]" />
+            <span>Found {hospitals.length} hospitals nearby</span>
+          </div>
+
+          {hospitals.map((hospital, index) => (
+            <div
+              key={index}
+              className="bg-white border border-[#FFE5EB] rounded-2xl p-6 shadow transition hover:shadow-md"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <Heart className="w-6 h-6 text-[#FF8FA3]" />
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">{hospital.name}</h3>
+                      <div className="flex items-center text-gray-600 mt-1">
+                        <MapPin className="w-4 h-4 mr-1 text-[#FF8FA3]" />
+                        <span className="text-sm">
+                          {hospital.distance.toFixed(2)} km away
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 mt-4">
+                    <a
+                      href={`https://www.google.com/maps?q=${hospital.lat},${hospital.lon}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-4 py-2 bg-[#FF8FA3] hover:bg-[#ff7c98] text-white text-sm font-medium rounded-xl"
+                    >
+                      <MapPin className="w-4 h-4 mr-2" />
+                      View on Map
+                    </a>
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${hospital.lat},${hospital.lon}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-4 py-2 bg-[#FFE5EB] hover:bg-[#FFD0DD] text-[#333] text-sm font-medium rounded-xl"
+                    >
+                      <Navigation className="w-4 h-4 mr-2 text-[#FF8FA3]" />
+                      Get Directions
+                    </a>
+                  </div>
+                </div>
+                <div className="ml-4 text-right">
+                  <div className="bg-[#E8FCE8] border border-green-300 px-3 py-1 rounded-full">
+                    <span className="text-green-700 text-sm font-medium">Open 24/7</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {/* Footer */}
+    <div className="bg-white shadow-sm border-t border-[#FFA6C1] mt-12">
+      <div className="container mx-auto px-6 py-6">
+        <div className="flex items-center justify-between text-sm text-gray-600">
+          <div className="flex items-center space-x-2">
+            <Clock className="w-4 h-4 text-[#FF8FA3]" />
+            <span>Last updated: {new Date().toLocaleTimeString()}</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Phone className="w-4 h-4 text-[#FF8FA3]" />
+            <span>Emergency: 108</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default NearbyHospitalsOSM;

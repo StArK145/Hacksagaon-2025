@@ -22,6 +22,7 @@ import {
   FaEye,
   FaEyeSlash,
 } from "react-icons/fa";
+import {  Activity } from 'lucide-react';
 
 const HealthAuth = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -179,99 +180,64 @@ const HealthAuth = () => {
   };
 
 return (
-  <div className="min-h-screen flex relative overflow-hidden" style={{background: 'linear-gradient(135deg, rgb(48, 121, 102) 0%, rgb(129, 197, 169) 50%, rgb(239, 239, 239) 100%)'}}>
+  <div className="min-h-screen flex relative overflow-hidden bg-gradient-to-br from-teal-100 via-cyan-100 to-emerald-200">
     {/* Floating Elements */}
     <div className="absolute inset-0">
-      <div className="absolute top-20 left-10 w-72 h-72 rounded-full opacity-10 animate-float" style={{backgroundColor: 'rgb(129, 197, 169)'}}></div>
-      <div className="absolute top-1/2 right-20 w-96 h-96 rounded-full opacity-15 animate-float-delayed" style={{backgroundColor: 'rgb(48, 121, 102)'}}></div>
-      <div className="absolute bottom-20 left-1/3 w-64 h-64 rounded-full opacity-20 animate-pulse" style={{backgroundColor: 'rgb(129, 197, 169)'}}></div>
-      
-      {/* Mesh Grid Pattern */}
-      <div className="absolute inset-0 opacity-5" style={{
-        backgroundImage: `radial-gradient(circle at 1px 1px, rgb(48, 121, 102) 1px, transparent 0)`,
-        backgroundSize: '40px 40px'
-      }}></div>
+      <div className="absolute top-20 left-10 w-72 h-72 rounded-full bg-pink-200 opacity-30 animate-pulse"></div>
+      <div className="absolute top-1/2 right-20 w-96 h-96 rounded-full bg-teal-200 opacity-20 animate-bounce"></div>
+      <div className="absolute bottom-20 left-1/3 w-64 h-64 rounded-full bg-cyan-200 opacity-25 animate-pulse"></div>
+      <div className="absolute inset-0 opacity-5 bg-gradient-to-r from-pink-300 to-teal-300"></div>
     </div>
 
-    {/* Left Branding Section */}
-    <div className="w-1/2 relative z-10 flex flex-col justify-center items-center p-16 text-white">
-      <div className="backdrop-blur-lg rounded-3xl p-10 border shadow-2xl" style={{
-        background: 'rgba(48, 121, 102, 0.2)',
-        borderColor: 'rgba(129, 197, 169, 0.3)'
-      }}>
+    {/* Branding Section */}
+    <div className="w-1/2 relative z-10 flex flex-col justify-center items-center p-16 text-pink-600">
+      <div className="backdrop-blur-lg rounded-3xl p-10 border border-pink-200 shadow-2xl bg-white/40">
         <div className="text-center mb-10">
-          {/* Logo Icon */}
-          <div className="w-24 h-24 mx-auto mb-8 rounded-3xl flex items-center justify-center shadow-xl transform hover:scale-105 transition-all duration-300" style={{
-            background: 'linear-gradient(135deg, rgb(129, 197, 169), rgb(48, 121, 102))'
-          }}>
-            <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
+          <div className="flex justify-center">
+            <div className="bg-pink-200/30 backdrop-blur-sm rounded-full p-6 border border-pink-300/50 mb-4">
+              <Activity className="w-16 h-16 text-pink-500" />
+            </div>
           </div>
-          
-          <h1 className="text-6xl font-bold mb-4 bg-clip-text text-transparent" style={{
-            backgroundImage: 'linear-gradient(135deg, rgb(129, 197, 169), white)'
-          }}>
-            HealthSync
-          </h1>
-          <p className="text-2xl opacity-90 font-light">
-            Transform Your Wellness Journey
-          </p>
+          <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-gray-400 to-teal-400 bg-clip-text text-transparent">HealthSync</h1>
+          <p className="text-2xl opacity-90 font-light text-gray-500">Transform Your Wellness Journey</p>
         </div>
-        
-        {/* Feature Pills */}
+
         <div className="space-y-6">
           {[
-            { icon: "⚡", text: "AI-Powered Health Insights", delay: "0ms" },
-            { icon: "🔒", text: "Secure Data Protection", delay: "150ms" },
-            { icon: "📊", text: "Real-time Analytics", delay: "300ms" }
+            { icon: "⚡", text: "AI-Powered Health Insights" },
+            { icon: "🔒", text: "Secure Data Protection" },
+            { icon: "📊", text: "Real-time Analytics" },
           ].map((feature, index) => (
-            <div key={index} className="flex items-center space-x-4 p-4 rounded-2xl backdrop-blur-sm transform hover:scale-105 transition-all duration-300" style={{
-              background: 'rgba(129, 197, 169, 0.15)',
-              animationDelay: feature.delay
-            }}>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-lg" style={{
-                backgroundColor: 'rgb(129, 197, 169)'
-              }}>
+            <div key={index} className="flex items-center space-x-4 p-4 rounded-2xl backdrop-blur-sm bg-pink-100/20 hover:bg-pink-100/30 hover:scale-105 transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-lg bg-pink-300">
                 {feature.icon}
               </div>
-              <span className="text-lg font-medium text-white">{feature.text}</span>
+              <span className="text-lg font-medium text-gray-600">{feature.text}</span>
             </div>
           ))}
         </div>
       </div>
     </div>
 
-    {/* Right Form Section */}
+    {/* Form Section */}
     <div className="w-1/2 relative z-10 flex items-center justify-center p-8">
       <div className="w-full max-w-lg">
-        {/* Main Form Container */}
-        <div className="backdrop-blur-xl rounded-3xl p-10 shadow-2xl border transform hover:scale-[1.01] transition-all duration-500" style={{
-          background: 'rgba(239, 239, 239, 0.95)',
-          borderColor: 'rgba(129, 197, 169, 0.2)'
-        }}>
-          
-          {/* Enhanced Tab Navigation */}
+        <div className="backdrop-blur-xl rounded-3xl p-10 shadow-2xl border border-pink-200/30 bg-white/80 hover:scale-[1.01] transition-all duration-500">
+          {/* Tab Nav */}
           <div className="flex justify-center mb-10">
-            <div className="flex p-2 rounded-2xl relative shadow-inner" style={{backgroundColor: 'rgb(239, 239, 239)'}}>
-              <div 
-                className={`absolute top-2 bottom-2 rounded-xl shadow-lg transition-all duration-500 ease-out transform ${
+            <div className="flex p-2 rounded-2xl relative shadow-inner bg-pink-50">
+              <div
+                className={`absolute top-2 bottom-2 rounded-xl shadow-lg transition-all duration-500 ease-out transform bg-gradient-to-br from-[#FF8FA3] to-[#FFA6C1] ${
                   activeTab === "login" ? "left-2 w-24" : "left-28 w-28"
                 }`}
-                style={{
-                  background: 'linear-gradient(135deg, rgb(48, 121, 102), rgb(129, 197, 169))'
-                }}
               ></div>
-              
+
               {["login", "register"].map((tab) => (
                 <button
                   key={tab}
-                  className={`relative z-10 px-8 py-4 font-bold text-sm transition-all duration-300 rounded-xl transform ${
-                    activeTab === tab 
-                      ? "text-white scale-105" 
-                      : "hover:scale-105"
+                  className={`relative z-10 px-8 py-4 font-bold text-sm transition-all duration-300 rounded-xl transform hover:scale-105 ${
+                    activeTab === tab ? "text-white scale-105" : "text-pink-600"
                   }`}
-                  style={{color: activeTab === tab ? 'white' : 'rgb(48, 121, 102)'}}
                   onClick={() => setActiveTab(tab)}
                 >
                   {tab === "login" ? "Sign In" : "Join Us"}
@@ -280,9 +246,9 @@ return (
             </div>
           </div>
 
-          {/* Enhanced Alert Messages */}
+          {/* Error/Success Alerts */}
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-r-xl animate-in slide-in-from-left duration-500">
+            <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-r-xl">
               <div className="flex items-center">
                 <div className="w-6 h-6 bg-red-400 rounded-full flex items-center justify-center mr-3">
                   <span className="text-white text-sm">!</span>
@@ -291,32 +257,26 @@ return (
               </div>
             </div>
           )}
-          
           {successMessage && (
-            <div className="border-l-4 p-4 mb-6 rounded-r-xl animate-in slide-in-from-left duration-500" style={{
-              backgroundColor: 'rgba(129, 197, 169, 0.1)',
-              borderColor: 'rgb(129, 197, 169)'
-            }}>
+            <div className="bg-teal-50 border-l-4 border-teal-400 p-4 mb-6 rounded-r-xl">
               <div className="flex items-center">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center mr-3" style={{backgroundColor: 'rgb(129, 197, 169)'}}>
+                <div className="w-6 h-6 bg-teal-400 rounded-full flex items-center justify-center mr-3">
                   <span className="text-white text-sm">✓</span>
                 </div>
-                <span className="font-medium" style={{color: 'rgb(48, 121, 102)'}}>{successMessage}</span>
+                <span className="font-medium text-teal-800">{successMessage}</span>
               </div>
             </div>
           )}
 
-          {/* Form Content */}
+          {/* Login / Register Forms */}
           {activeTab === "login" ? (
-            <form className="space-y-8" onSubmit={handleLogin}>
-              {/* Email Input */}
+            <div className="space-y-8">
+              {/* Email */}
               <div className="group">
-                <label className="block text-sm font-semibold mb-2" style={{color: 'rgb(48, 121, 102)'}}>
-                  Email Address
-                </label>
+                <label className="block text-sm font-semibold mb-2 text-gray-600">Email Address</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <FaUser className="text-gray-400 group-focus-within:text-current transition-colors" style={{color: 'rgb(129, 197, 169)'}} />
+                    <FaUser className="text-gray-300 group-focus-within:text-gray-500 transition-colors" />
                   </div>
                   <input
                     type="email"
@@ -325,23 +285,17 @@ return (
                     onChange={(e) => setLoginEmail(e.target.value)}
                     onKeyDown={(e) => handleArrowKeys(e, passwordRef, null)}
                     placeholder="your@email.com"
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:ring-0 transition-all duration-300 text-gray-700 placeholder-gray-400 shadow-sm"
-                    style={{
-                      focusBorderColor: 'rgb(129, 197, 169)',
-                      focusBoxShadow: '0 0 0 3px rgba(129, 197, 169, 0.1)'
-                    }}
+                    className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-gray-200 focus:border-gray-400 transition-all text-gray-700 placeholder-gray-300 shadow-sm bg-white/70"
                   />
                 </div>
               </div>
 
-              {/* Password Input */}
+              {/* Password */}
               <div className="group">
-                <label className="block text-sm font-semibold mb-2" style={{color: 'rgb(48, 121, 102)'}}>
-                  Password
-                </label>
+                <label className="block text-sm font-semibold mb-2 text-gray-600">Password</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <FaLock className="text-gray-400 group-focus-within:text-current transition-colors" style={{color: 'rgb(129, 197, 169)'}} />
+                    <FaLock className="text-gray-300 group-focus-within:text-gray-500 transition-colors" />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
@@ -350,12 +304,11 @@ return (
                     onChange={(e) => setLoginPassword(e.target.value)}
                     onKeyDown={(e) => handleArrowKeys(e, null, emailRef)}
                     placeholder="Enter your password"
-                    className="w-full pl-12 pr-12 py-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:ring-0 transition-all duration-300 text-gray-700 placeholder-gray-400 shadow-sm"
+                    className="w-full pl-12 pr-12 py-4 rounded-2xl border-2 border-gray-200 focus:border-gray-400 transition-all text-gray-700 placeholder-gray-300 shadow-sm bg-white/70"
                   />
                   <button
                     type="button"
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-current transition-colors"
-                    style={{color: 'rgb(129, 197, 169)'}}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -367,8 +320,7 @@ return (
                 <button
                   type="button"
                   onClick={handleForgotPassword}
-                  className="text-sm font-semibold hover:underline transition-all duration-300"
-                  style={{color: 'rgb(48, 121, 102)'}}
+                  className="text-sm font-semibold text-gray-500 hover:underline"
                 >
                   Forgot Password?
                 </button>
@@ -378,159 +330,126 @@ return (
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 rounded-2xl font-bold text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{
-                  background: loading ? 'rgb(129, 197, 169)' : 'linear-gradient(135deg, rgb(48, 121, 102), rgb(129, 197, 169))'
-                }}
+                className="w-full py-4 rounded-2xl font-bold text-white bg-gradient-to-br from-[#FF8FA3] to-[#FFA6C1]"
               >
-                {loading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Signing in...
-                  </div>
-                ) : (
-                  "Sign In to HealthSync"
-                )}
+                {loading ? "Signing in..." : "Sign In to HealthSync"}
               </button>
 
-              {/* Divider */}
+              {/* Google */}
               <div className="relative my-8">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200"></div>
+                  <div className="w-full border-t border-pink-200"></div>
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="px-6 text-sm font-medium text-gray-500" style={{backgroundColor: 'rgb(239, 239, 239)'}}>
-                    or continue with
-                  </span>
+                  <span className="px-6 text-sm font-medium text-gray-400 bg-white/80">or continue with</span>
                 </div>
               </div>
 
-              {/* Google Button */}
               <button
                 type="button"
                 onClick={() => handleGoogleAuth(false)}
-                className="w-full border-2 py-4 rounded-2xl flex items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:scale-[1.01] group"
-                style={{
-                  borderColor: 'rgb(129, 197, 169)',
-                  backgroundColor: 'white'
-                }}
+                className="w-full border-2 border-pink-300 py-4 rounded-2xl flex items-center justify-center bg-white/70 hover:bg-white/90"
               >
-                <FaGoogle className="mr-3 text-red-500 group-hover:scale-110 transition-transform" />
-                <span className="font-semibold" style={{color: 'rgb(48, 121, 102)'}}>Continue with Google</span>
+                <FaGoogle className="mr-3 text-red-500" />
+                <span className="font-semibold text-pink-600">Continue with Google</span>
               </button>
-            </form>
+            </div>
           ) : (
-            <form className="space-y-6" onSubmit={handleRegister}>
-              {/* Register form with similar styling patterns */}
-              <div className="space-y-6">
-                {[
-                  { ref: registerEmailRef, value: registerEmail, setValue: setRegisterEmail, type: "email", placeholder: "your@email.com", icon: FaEnvelope, label: "Email Address" },
-                  { ref: registerPasswordRef, value: registerPassword, setValue: setRegisterPassword, type: showPassword ? "text" : "password", placeholder: "Create strong password", icon: FaLock, label: "Password", showToggle: true },
-                  { ref: confirmPasswordRef, value: confirmPassword, setValue: setConfirmPassword, type: showConfirmPassword ? "text" : "password", placeholder: "Confirm password", icon: FaLock, label: "Confirm Password", showToggle: true, useConfirmToggle: true }
-                ].map((field, index) => (
-                  <div key={index} className="group">
-                    <label className="block text-sm font-semibold mb-2" style={{color: 'rgb(48, 121, 102)'}}>
-                      {field.label}
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <field.icon className="text-gray-400 group-focus-within:text-current transition-colors" style={{color: 'rgb(129, 197, 169)'}} />
-                      </div>
-                      <input
-                        type={field.type}
-                        ref={field.ref}
-                        value={field.value}
-                        onChange={(e) => field.setValue(e.target.value)}
-                        placeholder={field.placeholder}
-                        className="w-full pl-12 pr-12 py-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:ring-0 transition-all duration-300 text-gray-700 placeholder-gray-400 shadow-sm"
-                      />
-                      {field.showToggle && (
-                        <button
-                          type="button"
-                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-current transition-colors"
-                          style={{color: 'rgb(129, 197, 169)'}}
-                          onClick={() => field.useConfirmToggle ? setShowConfirmPassword(!showConfirmPassword) : setShowPassword(!showPassword)}
-                        >
-                          {(field.useConfirmToggle ? showConfirmPassword : showPassword) ? <FaEyeSlash /> : <FaEye />}
-                        </button>
-                      )}
+            <div className="space-y-6">
+              {/* Register Fields */}
+              {[
+                {
+                  ref: registerEmailRef,
+                  value: registerEmail,
+                  setValue: setRegisterEmail,
+                  type: "email",
+                  placeholder: "your@email.com",
+                  icon: FaEnvelope,
+                  label: "Email Address",
+                },
+                {
+                  ref: registerPasswordRef,
+                  value: registerPassword,
+                  setValue: setRegisterPassword,
+                  type: showPassword ? "text" : "password",
+                  placeholder: "Create strong password",
+                  icon: FaLock,
+                  label: "Password",
+                  showToggle: true,
+                },
+                {
+                  ref: confirmPasswordRef,
+                  value: confirmPassword,
+                  setValue: setConfirmPassword,
+                  type: showConfirmPassword ? "text" : "password",
+                  placeholder: "Confirm password",
+                  icon: FaLock,
+                  label: "Confirm Password",
+                  showToggle: true,
+                  useConfirmToggle: true,
+                },
+              ].map((field, index) => (
+                <div key={index} className="group">
+                  <label className="block text-sm font-semibold mb-2 text-gray-600">{field.label}</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <field.icon className="text-gray-300" />
                     </div>
+                    <input
+                      type={field.type}
+                      ref={field.ref}
+                      value={field.value}
+                      onChange={(e) => field.setValue(e.target.value)}
+                      placeholder={field.placeholder}
+                      className="w-full pl-12 pr-12 py-4 rounded-2xl border-2 border-gray-200 focus:border-gray-400 text-gray-700 placeholder-gray-300 shadow-sm bg-white/70"
+                    />
+                    {field.showToggle && (
+                      <button
+                        type="button"
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        onClick={() =>
+                          field.useConfirmToggle
+                            ? setShowConfirmPassword(!showConfirmPassword)
+                            : setShowPassword(!showPassword)
+                        }
+                      >
+                        {field.useConfirmToggle ? (showConfirmPassword ? <FaEyeSlash /> : <FaEye />) : (showPassword ? <FaEyeSlash /> : <FaEye />)}
+                      </button>
+                    )}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 rounded-2xl font-bold text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{
-                  background: loading ? 'rgb(129, 197, 169)' : 'linear-gradient(135deg, rgb(48, 121, 102), rgb(129, 197, 169))'
-                }}
+                className="w-full py-4 rounded-2xl font-bold text-white bg-gradient-to-br from-[#FF8FA3] to-[#FFA6C1]"
               >
-                {loading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Creating Account...
-                  </div>
-                ) : (
-                  "Create Your Account"
-                )}
+                {loading ? "Creating Account..." : "Create Your Account"}
               </button>
 
               <div className="relative my-8">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200"></div>
+                  <div className="w-full border-t border-pink-200"></div>
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="px-6 text-sm font-medium text-gray-500" style={{backgroundColor: 'rgb(239, 239, 239)'}}>
-                    or continue with
-                  </span>
+                  <span className="px-6 text-sm font-medium text-gray-400 bg-white/80">or continue with</span>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={() => handleGoogleAuth(true)}
-                className="w-full border-2 py-4 rounded-2xl flex items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:scale-[1.01] group"
-                style={{
-                  borderColor: 'rgb(129, 197, 169)',
-                  backgroundColor: 'white'
-                }}
+                className="w-full border-2 border-pink-300 py-4 rounded-2xl flex items-center justify-center bg-white/70 hover:bg-white/90"
               >
-                <FaGoogle className="mr-3 text-red-500 group-hover:scale-110 transition-transform" />
-                <span className="font-semibold" style={{color: 'rgb(48, 121, 102)'}}>Continue with Google</span>
+                <FaGoogle className="mr-3 text-red-500" />
+                <span className="font-semibold text-pink-600">Continue with Google</span>
               </button>
-            </form>
+            </div>
           )}
         </div>
       </div>
     </div>
-
-    {/* Custom CSS for animations */}
-    <style jsx>{`
-      @keyframes float {
-        0%, 100% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(5deg); }
-      }
-      
-      @keyframes float-delayed {
-        0%, 100% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(-30px) rotate(-5deg); }
-      }
-      
-      .animate-float {
-        animation: float 6s ease-in-out infinite;
-      }
-      
-      .animate-float-delayed {
-        animation: float-delayed 8s ease-in-out infinite;
-      }
-      
-      input:focus {
-        border-color: rgb(129, 197, 169) !important;
-        box-shadow: 0 0 0 3px rgba(129, 197, 169, 0.1) !important;
-      }
-    `}</style>
   </div>
 );
 };

@@ -34,7 +34,7 @@ const GettingStarted = () => {
 
           {/* Welcome Text */}
           <div>
-            <h1 className="text-5xl font-black text-gray-800 mb-4 drop-shadow-lg tracking-tight pr-14">
+            <h1 className="text-5xl font-white text-gray-600 text-800 mb-4 drop-shadow-lg tracking-tight pr-14">
               Welcome to HealthSync
             </h1>
             <p className="text-2xl text-gray-600 leading-relaxed font-light">
