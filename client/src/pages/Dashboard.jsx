@@ -186,6 +186,7 @@ return (
                 }`}>
                   {feature.preview}
                 </p>
+                <p>set</p>
                 <p className={`text-xs ${
                   selectedChat === feature.id ? "text-pink-200" : "text-gray-500"
                 }`}>
